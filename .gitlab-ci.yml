@@ -11,6 +11,7 @@ compile:
   #   - apt install -y pandoc
   script:
     - make clean
+    - nim c src/kyokusei_nim.nim
     - make
     - printf "compilation succeded\n"
   artifacts:
