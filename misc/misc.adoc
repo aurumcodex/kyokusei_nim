@@ -1,0 +1,19 @@
+= Miscelaneous Information
+
+=== Website
+Found here: https://kyokusei.gitlab.io
+
+=== Discord Server
+Invite here: https://discord.gg/95JFdUf
+
+=== Software Used
+* devkitPro
+** devkitARM
+** grit
+** MaxMod
+* neovim
+* vs-codium
+* Aesprite
+
+=== Technologies Used
+* Nim

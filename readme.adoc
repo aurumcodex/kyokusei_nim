@@ -1,0 +1,62 @@
+= 極性 -Kyokusei- (Nim)
+Nathan Adams <aurumcodex@protonmail.com>
+v0.0.0, 2019.09.21
+:version: 0.0.0
+:imagesdir: misc/img
+:homepage: https://kyokusei.gitlab.io
+
+
+'''
+++++
+<div align="center">
+    <img width="500px" src="misc/img/kyokusei_banner_waifu2x.png"/>
+    <br/>
+    <table>
+        <tr>
+            <th>Language</th>
+            <th>GitLab CI</th>
+            <th>License</th>
+            <th>Platform</th>
+            <th>Discord</th>
+        </tr>
+        <tr>
+            <td><img src="https://forthebadge.com/images/badges/made-with-c.svg" alt="Made with C"/></td>
+            <td><img src="https://img.shields.io/gitlab/pipeline/kyokusei/kyokusei_nim.svg?color=98c832&label=pipeline&logo=gitlab&style=flat-square" alt="Pipeline Status"/></td>
+            <td><img src="https://img.shields.io/badge/license-Apache 2.0-137.svg?style=flat-square" alt="License Used"/></td>
+            <td><img src="https://img.shields.io/badge/Nintendo-GBA-5517A3.svg?style=flat-square&logo=nintendo" alt="For the GBA Handheld Console"/></td>
+            <td><a href="https://discord.gg/95JFdUf"><img src="https://discordapp.com/api/guilds/564447217180606484/embed.png" alt="Discord Server"/></a></td>
+        </tr>
+    </table>
+</div>
+++++
+// image::public/img/kyokusei_banner_waifu2x.png[Logo, 500]
+'''
+
+A GBA homebrew game developed in the Nim programming language. Contains "polarity shifting" features and gameplay.
+
+Beta Release Date: *10.31.2019*.
+
+Target Release Date: *11.26.2019*.
+
+
+
+'''
+
+== Dependencies
+* devkitARM and associated tools (installed from the devkitpro project.)
+* make
+
+== Acknowledgements
+- *NotNova#9993*: sprite design (A Discord acquaintance of mine).
+
+== License
+This project is (currently) licensed under the link:LICENSE[MIT License].
+
+Kyokusei is based in part on the work of the devkitpro project (http://sourceforge.net/projects/devkitpro).
+
+// ++++
+// <div align="right">
+//     <img width="80px" src="misc/img/apache.png" alt="Apache Licensed"/>
+// </div>
+// ++++
+image::MIT_logo.png["MIT Licensed", 64, role="right"]
