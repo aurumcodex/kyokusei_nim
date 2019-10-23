@@ -5,8 +5,8 @@ compile:
   stage: compile
   image:
     name: registry.gitlab.com/kyokusei/ci_images/nim_gba:latest
-   before_script:
-     - nimble install https://github.com/exelotl/nim-tonc.git
+  before_script:
+    - nimble install https://github.com/exelotl/nim-tonc.git
   #   - apt install -y texlive
   #   - apt install -y pandoc
   script:
