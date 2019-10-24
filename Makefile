@@ -97,15 +97,14 @@ all : $(BUILD) #books
 $(BUILD):
 	@printf "$(BLD_BLU)::\033[0m \033[1mMaking GBA ROM...\033[0m\n"
 	@[ -d $@ ] || mkdir -p $@
-	# @$(MAKE) -f $(CURDIR)/gfx_make.mk
 # 	@nim c src/kyokusei_nim.nim
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 	@printf "$(BLD_GRN)::\033[0m \033[1mkyokusei.gba created.\033[0m\n"
 
 clean:
-	@printf "$(BLD_BLU)::\033[0m \033[1mcleaning files...\033[0m\n"
-	@rm -rfv $(BUILD) $(TARGET).elf $(TARGET).gba $(TARGET).sav guidebook.pdf
-	@printf "$(BLD_GRN)::\033[0m \033[1mproject cleaned.\033[0m\n"
+	@printf "\n$(BLD_BLU)::\033[0m \033[1mcleaning files...\033[0m\n"
+	@rm -rfv $(BUILD) $(TARGET).elf $(TARGET).gba $(TARGET).sav guidebook.pdf $(SOURCES)
+	@printf "$(BLD_GRN)::\033[0m \033[1mproject cleaned.\033[0m\n\n"
 
 # books : guidebook.pdf
 

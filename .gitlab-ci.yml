@@ -10,9 +10,10 @@ compile:
   #   - apt install -y texlive
   #   - apt install -y pandoc
   script:
-    - make clean
-    - nim c src/kyokusei_nim.nim
-    - make
+    - bash build.sh
+    # - make clean
+    # - nim c src/kyokusei_nim.nim
+    # - make
     - printf "compilation succeded\n"
   artifacts:
     name: "$CI_PROJECT_NAME $CI_COMMIT_REF_NAME $CI_COMMIT_SHORT_SHA"

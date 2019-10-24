@@ -9,4 +9,4 @@
 # (-ft) export as binary data [*.bin]
 # (-fh) toggle header file generation
 
--gt -gTFF00FF -gB4 -m -mRtpf -p -ftb -fh!
+-gt -gTFF00FF -gB4 -mRtpf -p -ftb -fh!
