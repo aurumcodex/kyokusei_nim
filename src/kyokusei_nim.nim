@@ -13,10 +13,15 @@
 
 import tonc
 
-import sprites
+# import sprites
+import actors
+# import mechanics
+import rendering
 import panicoverride
 
-var posVec = vec2i(82, 78)
+var
+  posVec = vec2i(82, 78)
+  frameCount = 0
 
 proc main() =
   irqInit()
@@ -24,11 +29,26 @@ proc main() =
 
   REG_DISPCNT = DCNT_BG0 or DCNT_OBJ or DCNT_OBJ_1D
 
-  memcpy16(addr palObjBank[0], BotPalette, BotPalette.len div 2)
-  memcpy32(addr tileMemObj[0], BotTiles, BotTiles.len div 4)
+  # memcpy16(addr palObjBank[0], BotPalette, BotPalette.len div 2)
+  # memcpy32(addr tileMemObj[0], BotTiles, BotTiles.len div 4)
 
-  memcpy16(addr palObjBank[1], EnemySlimePalette, EnemySlimePalette.len div 4)
-  memcpy32(addr tileMemObj[1], EnemySlimeTiles, EnemySlimeTiles.len div 4)
+  # memcpy16(addr palObjBank[1], EnemySlimePalette, EnemySlimePalette.len div 8)
+  # memcpy32(addr tileMemObj[1], EnemySlimeTiles, EnemySlimeTiles.len div 4)
+
+  # memcpy16(addr palObjBank[3], EchoPalette, EchoPalette.len div 2)
+  # memcpy32(addr tileMemObj[0][5], EchoTIles, EchoTiles.len div 4)
+
+  # # memcpy16(addr palBgBank[0], KakarikoPalette, KakarikoPalette.len div 2)
+  # # memcpy32(addr seMem[0], KakarikoTiles, KakarikoTiles.len div 4)
+
+  # memcpy16(addr palBgBank[0], Room1Palette, Room1Palette.len div 2)
+  # memcpy32(addr tileMem[0], Room1Tiles, Room1Tiles.len div 4)
+
+  # loadSprites(SpriteData)
+  # loadObjPalettes(SpritePals)
+
+  loadObjSprites()
+  loadObjPalettes()
 
   oamMem[0].setAttr(
     ATTR0_Y(posVec.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
@@ -37,9 +57,15 @@ proc main() =
   )
 
   oamMem[1].setAttr(
-    ATTR0_Y(posVec.y.uint16 + 10) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(posVec.x.uint16 + 50) or ATTR1_SIZE_16,
-    ATTR2_ID(513) or ATTR2_PALBANK(1)
+    ATTR0_Y(posVec.y.uint16 - 20) or ATTR0_4BPP or ATTR0_TALL,
+    ATTR1_X(posVec.x.uint16 - 40) or ATTR1_SIZE_16x32,
+    ATTR2_ID(6) or ATTR2_PALBANK(3)
+  )
+
+  oamMem[2].setAttr(
+    ATTR0_Y(posVec.y.uint16 + 10) or ATTR0_4BPP or ATTR0_TALL,
+    ATTR1_X(posVec.x.uint16 + 50) or ATTR1_SIZE_16x32,
+    ATTR2_ID(76) or ATTR2_PALBANK(1)
   )
 
   tteInitChr4cDefault(0, BG_CBB(0) or BG_SBB(31))
@@ -57,6 +83,8 @@ proc main() =
     if keyIsDown(KEY_DOWN): posVec.y += 1
 
     oamMem[0].setPos(posVec)
+
+    inc(frameCount) # increment frame count
 
     VBlankIntrWait()
 

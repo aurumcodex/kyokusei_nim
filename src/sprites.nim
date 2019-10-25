@@ -18,10 +18,17 @@ const
   Room3Tiles*: cstring = staticRead("gfx/bg_room3.img.bin")
   Room4Tiles*: cstring = staticRead("gfx/bg_room4.img.bin")
   KakarikoTiles*: cstring = staticRead("gfx/kakariko.img.bin")
-
+  
 const
-  EchoTiles*: cstring = staticRead("gfx/echo.img.bin")
+  Room1Palette*: cstring = staticRead("gfx/bg_room1.pal.bin")
+  Room2Palette*: cstring = staticRead("gfx/bg_room2.pal.bin")
+  Room3Palette*: cstring = staticRead("gfx/bg_room3.pal.bin")
+  Room4Palette*: cstring = staticRead("gfx/bg_room4.pal.bin")
+  KakarikoPalette*: cstring = staticRead("gfx/kakariko.pal.bin")
+  
+const
   BotTiles*: cstring = staticRead("gfx/bot.img.bin")
+  EchoTiles*: cstring = staticRead("gfx/echo.img.bin")
   GimpBotTiles*: cstring = staticRead("gfx/bot_gimp.img.bin")
   EnemyChronchaTiles*: cstring = staticRead("gfx/emy_chroncha.img.bin")
   EnemyNaniteWaveTiles*: cstring = staticRead("gfx/emy_nanite_wave.img.bin")
@@ -30,15 +37,8 @@ const
   EnemyTrentTiles*: cstring = staticRead("gfx/emy_trent.img.bin")
 
 const
-  Room1Palette*: cstring = staticRead("gfx/bg_room1.pal.bin")
-  Room2Palette*: cstring = staticRead("gfx/bg_room2.pal.bin")
-  Room3Palette*: cstring = staticRead("gfx/bg_room3.pal.bin")
-  Room4Palette*: cstring = staticRead("gfx/bg_room4.pal.bin")
-  KakarikoPalette*: cstring = staticRead("gfx/kakariko.pal.bin")
-
-const
-  EchoPalette*: cstring = staticRead("gfx/echo.pal.bin")
   BotPalette*: cstring = staticRead("gfx/bot.pal.bin")
+  EchoPalette*: cstring = staticRead("gfx/echo.pal.bin")
   GimpBotPalette*: cstring = staticRead("gfx/bot_gimp.pal.bin")
   EnemyChronchaPalette*: cstring = staticRead("gfx/emy_chroncha.pal.bin")
   EnemyNaniteWavePalette*: cstring = staticRead("gfx/emy_nanite_wave.pal.bin")
