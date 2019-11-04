@@ -77,7 +77,7 @@ proc main() =
     if keyIsDown(KEY_ANY): slimeIndex += 4
 
     tteWrite("#{P:10,10")
-    tte
+    # tte
     # tteWrite("x =")
 
     oamMem[0].setPos(posVec)
