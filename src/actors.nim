@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-10-24
+  Date Modified: 2019-10-26
 
   ## [Actors File]
   A file used for various characters and things that the player can interact
@@ -17,6 +17,7 @@ import geometry
 
 type
   Player* = object
+    ## A Player data type that holds the boundaries that 
     boundaries*: Box
     spriteIndex*: int
     deaths*: uint

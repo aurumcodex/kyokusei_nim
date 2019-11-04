@@ -13,39 +13,21 @@
 
 import tonc
 
-# import sprites
 import actors
-# import mechanics
 import rendering
 import panicoverride
 
 var
   posVec = vec2i(82, 78)
+  slimePos = vec2i(120, 80)
   frameCount = 0
+  slimeIndex = 37
 
 proc main() =
   irqInit()
   irqEnable(II_VBLANK)
 
   REG_DISPCNT = DCNT_BG0 or DCNT_OBJ or DCNT_OBJ_1D
-
-  # memcpy16(addr palObjBank[0], BotPalette, BotPalette.len div 2)
-  # memcpy32(addr tileMemObj[0], BotTiles, BotTiles.len div 4)
-
-  # memcpy16(addr palObjBank[1], EnemySlimePalette, EnemySlimePalette.len div 8)
-  # memcpy32(addr tileMemObj[1], EnemySlimeTiles, EnemySlimeTiles.len div 4)
-
-  # memcpy16(addr palObjBank[3], EchoPalette, EchoPalette.len div 2)
-  # memcpy32(addr tileMemObj[0][5], EchoTIles, EchoTiles.len div 4)
-
-  # # memcpy16(addr palBgBank[0], KakarikoPalette, KakarikoPalette.len div 2)
-  # # memcpy32(addr seMem[0], KakarikoTiles, KakarikoTiles.len div 4)
-
-  # memcpy16(addr palBgBank[0], Room1Palette, Room1Palette.len div 2)
-  # memcpy32(addr tileMem[0], Room1Tiles, Room1Tiles.len div 4)
-
-  # loadSprites(SpriteData)
-  # loadObjPalettes(SpritePals)
 
   loadObjSprites()
   loadObjPalettes()
@@ -68,6 +50,12 @@ proc main() =
     ATTR2_ID(76) or ATTR2_PALBANK(1)
   )
 
+  oamMem[3].setAttr(
+    ATTR0_Y(slimePos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+    ATTR1_X(slimePos.x.uint16) or ATTR1_SIZE_16x16,
+    ATTR2_ID(37) or ATTR2_PALBANK(4)
+  )
+
   tteInitChr4cDefault(0, BG_CBB(0) or BG_SBB(31))
   tteWrite("#{P:92,68}")
   tteWrite("I'M ON A SCREEEEEEEEEEN")
@@ -82,7 +70,23 @@ proc main() =
     if keyIsDown(KEY_UP): posVec.y -= 1
     if keyIsDown(KEY_DOWN): posVec.y += 1
 
+    if keyIsDown(KEY_A): slimePos.y -= 1
+    if keyIsDown(KEY_B): slimePos.y += 1
+    if keyIsDown(KEY_L): slimePos.x -= 1
+    if keyIsDown(KEY_R): slimePos.x += 1
+    if keyIsDown(KEY_ANY): slimeIndex += 4
+
+    tteWrite("#{P:10,10")
+    tte
+    # tteWrite("x =")
+
     oamMem[0].setPos(posVec)
+    # oamMem[3].setAttr(
+    #   ATTR0_Y(slimePos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+    #   ATTR1_X(slimePos.x.uint16) or ATTR1_SIZE_16x16,
+    #   ATTR2_ID(slimeIndex) or ATTR2_PALBANK(4)
+    # )
+    # oamMem[3].attr2 = 
 
     inc(frameCount) # increment frame count
 

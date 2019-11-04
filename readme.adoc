@@ -22,7 +22,7 @@ v0.0.0, 2019.09.21
         <tr>
             <td><img src="https://forthebadge.com/images/badges/made-with-c.svg" alt="Made with C"/></td>
             <td><img src="https://img.shields.io/gitlab/pipeline/kyokusei/kyokusei_nim.svg?color=98c832&label=pipeline&logo=gitlab&style=flat-square" alt="Pipeline Status"/></td>
-            <td><img src="https://img.shields.io/badge/license-Apache 2.0-137.svg?style=flat-square" alt="License Used"/></td>
+            <td><img src="https://img.shields.io/badge/license-MIT-137.svg?style=flat-square" alt="License Used"/></td>
             <td><img src="https://img.shields.io/badge/Nintendo-GBA-5517A3.svg?style=flat-square&logo=nintendo" alt="For the GBA Handheld Console"/></td>
             <td><a href="https://discord.gg/95JFdUf"><img src="https://discordapp.com/api/guilds/564447217180606484/embed.png" alt="Discord Server"/></a></td>
         </tr>
@@ -43,14 +43,16 @@ Target Release Date: *11.26.2019*.
 '''
 
 == Dependencies
-* devkitARM and associated tools (installed from the devkitpro project.)
-* make
+- devkitARM and associated tools (installed from the devkitpro project.)
+- nim compiler
+** recommended to install via the choosenim script.
+- make
 
 == Acknowledgements
 - *NotNova#9993*: sprite design (A Discord acquaintance of mine).
 
 == License
-This project is (currently) licensed under the link:LICENSE[MIT License].
+This project is (currently) licensed under the link:LICENSE[MIT License]. All files within this repository are available under this license unless stated explicitly that it is not.
 
 Kyokusei is based in part on the work of the devkitpro project (http://sourceforge.net/projects/devkitpro).
 

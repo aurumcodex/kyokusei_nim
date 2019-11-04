@@ -1,5 +1,7 @@
 C_source
 gen_source
 build
+src/gfx/*.bin
 *.elf
 *.gba
+*.md

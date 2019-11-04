@@ -1,0 +1,63 @@
+= TODO List
+// a semi-exhaustive list of things that need to be done/implemented by 11.20.2019.
+// this is for all intents and purposes, a tenative list of TODOs.
+
+Remaining Items: *n*
+Estimated Feature Completeness: *x%*
+
+== Features Remaining = [13]
+- [ ] Sprite Animation
+- [ ] Collision Detection
+- [ ] Gravity Shifting Bot Gameplay Mechanics
+- [ ] Forme Shifting Player Gamplay Mechanics
+- [ ] Background Changing
+- [ ] Projectile Firing and Associated Mechanics
+** [ ] Collision
+** [ ] Damage Calculation
+- [ ] Player Movement
+- [ ] Enemy Movement
+- [ ] Item Use
+- [ ] "GAME OVER" states
+- [ ] Saving (optional)
+
+
+=== Sprite Related
+// NOT a rendering related thing; TODOs for loading sprites and making sprites
+- [ ] add "animation frames" to the Echo sprite
+- [ ] add "animation frames" to the Bot sprite (Era)
+- [ ] work on level design, time willing
+- [ ] add the pumpkin back
+
+=== Mechanic Related
+// related TODOs for the mechanics within the game
+- [ ] combat (simplified, for now)
+** [ ] gunfire in Keen Forme
+** [ ] slashing in Impusle Forme
+- [ ] take damage and deal damage
+- [ ] use items
+
+=== Logic Related
+// idk what counts as "logic," tbh
+- [ ] get and use items and apply effects to player
+- [ ] check if player is dead or if enemy is dead
+
+=== Rendering Related
+// rendering function TODOs.
+- [ ] figure out how to do animation of sprites (experiement with slime)
+- [ ] figure out how to render backgrounds properly
+- [ ] figure out how to _move_ the background(s) around
+- [ ] figure out how to move the viewport/camera around and have it centered on the (current) player sprite
+- [ ] print "GAME OVER" when player (Echo) dies (the bot can just respawn)
+- [ ] render pause menu
+- [ ] render item menu
+
+=== Input Related
+// TODOs for input stuff
+- [ ] get user input for sprites (mostly for testing, at current point)
+- [ ] get user input for changing "polarities"
+- [ ] get user input for menus
+
+=== Geometry Related
+// TODOs for geometry checks and the like
+- [ ] gain ability to detect collision
+- [ ] be able 

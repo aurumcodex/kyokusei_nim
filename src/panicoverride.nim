@@ -5,7 +5,7 @@
 
   ## [Panic Override File]
   A file required for compilation when Nim's compiler option for OS
-  is set to `standalone.`
+  is set to `standalone.` Simply imports the nim-tonc `panicoverride` file.
 
   ## [License]
   MIT Licensed. View LICENSE file for details.
