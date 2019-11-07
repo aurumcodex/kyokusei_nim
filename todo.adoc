@@ -2,7 +2,7 @@
 // a semi-exhaustive list of things that need to be done/implemented by 11.20.2019.
 // this is for all intents and purposes, a tenative list of TODOs.
 
-Remaining Items: *n*
+Remaining Items: approx. *37*
 Estimated Feature Completeness: *x%*
 
 == Features Remaining = [13]
@@ -59,5 +59,6 @@ Estimated Feature Completeness: *x%*
 
 === Geometry Related
 // TODOs for geometry checks and the like
-- [ ] gain ability to detect collision
-- [ ] be able 
+- [ ] create ability to detect collision
+- [ ] be able to stop when colliding with something
+- [ ] take damage with collision if enemy or area hazard

@@ -16,7 +16,18 @@ import tonc
 type
   Box* {.bycopy.} = object
     ## A box that will surround any given sprite.
-    height*: uint
-    width*: uint
-    top_left*: Vec2i
-    bottom_right*: Vec2i
+    boundLeft*: uint
+    boundRight*: uint
+    boundTop*: uint
+    boundBottom*: uint
+    # top_left*: Vec2i
+    # bottom_right*: Vec2i
+
+proc hasCollided*(player: Box, obj: Box): bool =
+  ## A function to determine if the player has collided with anything
+  # TODO: implement collision detection
+  # if player.top_left.x + player.width == obj.top_left.x:
+  #   result = true
+  # elif player.top_left.y + player.height == obj.top_left.y:
+  #   result = false
+  # elif player.bottom_right

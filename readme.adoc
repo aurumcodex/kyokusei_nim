@@ -34,9 +34,9 @@ v0.0.0, 2019.09.21
 
 A GBA homebrew game developed in the Nim programming language. Contains "polarity shifting" features and gameplay.
 
-Beta Release Date: *10.31.2019*.
+Beta Release Date: *11.15.2019*.
 
-Target Release Date: *11.26.2019*.
+Target Release Date: *11.25.2019*.
 
 
 

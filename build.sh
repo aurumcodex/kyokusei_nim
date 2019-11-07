@@ -3,6 +3,17 @@
 # this file doesn't particularly need to exist, but, it's still good to have
 # and to keep compilation "simplfied" as much as I can make it.
 
+readonly RESET="\033[0m"
+readonly BLD_ULINE="\033[1;4m"
+readonly BOLD="\033[1m"
+readonly BLD_YLW="\033p1;33m"
+readonly BLD_BLUE="\033[1;34m"
+readonly BLD_PURP="\033[1;35m"
+readonly CLR_RED="\033[31m"
+readonly CLR_B_RED="\033[1;31m"
+readonly CLR_YLW="\033[33m"
+readonly CLR_CYAN="\033[36m"
+
 readonly SRC_DIR=src
 readonly GFX_DIR=src/gfx
 
@@ -10,31 +21,52 @@ readonly GRIT_OPT=options.grit
 readonly GRIT_BG_OPT=backgrounds.grit
 
 readonly BG_PTTR="^bg_"
+readonly OBJ_MAP_PTTR=".map.bin$"
+
+# clean build setting first for a fresh clean slate
+make clean
+
+printf "\n${BLD_BLUE}::${RESET} "
+printf "${BLD_ULINE}Making GBA ROM...${RESET}\n\n"
 
 # image creation build sequence
+printf "${BLD_YLW}::${RESET} "
+printf "${BLD_ULINE}Compiling Sprite Data...${RESET}\n"
 cd ${GFX_DIR}
 for image in png/*; do
     if [[ ! $(basename ${image}) =~ ${BG_PTTR} ]]; then
-        printf "compiling sprite: ${image}\n"
+        printf "${CLR_YLW}compiling sprite${RESET}: ${image}\n"
         grit ${image} -ff ${GRIT_OPT}
     else
-        printf "compiling background: ${image}\n"
+        printf "${CLR_YLW}compiling background${RESET}: ${image}\n"
         grit ${image} -ff ${GRIT_BG_OPT}
+    fi
+done
+
+for image in ./*; do
+    if [[ $(basename ${image}) =~ ${OBJ_MAP_PTTR} && \
+    ! $(basename ${image}) =~ ${BG_PTTR} ]]; then
+        printf "${CLR_YLW}Removing unnecessary map${RESET}: $(basename ${image})\n"
+        rm ${image}
     fi
 done
 cd ../..
 
 # main build sequence
-make clean
-
+printf "\n${BLD_PURP}::${RESET} "
+printf "${BLD_ULINE}Compiling Nim source...${RESET}\n"
 nim c src/kyokusei_nim.nim
 if [[ $? > 0 ]]; then
-    printf "Nim compilation did not succeed. Aborting.\n"
+    printf "${CLR_B_RED}::${RESET} ${CLR_RED}Nim compilation failed.${RESET} Aborting.\n"
     exit 1
 fi
 
 make
+if [[ $? > 0 ]]; then
+    printf "${CLR_B_RED}::${RESET} ${CLR_RED}GBA compilation failed.${RESET} Aborting.\n"
+    exit 1
+fi
 
 # result printing
-printf "build script compilation done.\n"
-printf "time taken: ${SECONDS} seconds.\n"
+printf "${CLR_CYAN}>>${RESET} ${BOLD}build script compilation done.${RESET}\n"
+printf "${CLR_CYAN}>>${RESET} ${BOLD}time taken${RESET}: ${SECONDS} seconds.\n"

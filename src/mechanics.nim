@@ -10,10 +10,7 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
-#put these back into the main file.
-# import sprites
-# import geometry
-# import mechanics
+import geometry
 
 type
   GravityPolarity {.pure.} = enum

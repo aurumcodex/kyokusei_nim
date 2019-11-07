@@ -3,10 +3,11 @@
 # (-gt) gen tiles
 # (-gT) set transparent color rrggbb hexadecimal
 # (-gB) set bit depth
-# (-m)  include map data (or not) (doesn't by default
+# (-m)  include map data (or not) (doesn't by default)
+# (-mL) tile map layout (using reg sbb option)
 # (-mR) tile reductions: t = tiles, p = palette, f = flipped
 # (-p)  include palette data
 # (-ft) export as binary data [*.bin]
 # (-fh) toggle header file generation
 
--gt -gTFF00FF -gB4 -m -mRtpf -p -ftb -fh!
+-gt -gTFF00FF -gB4 -m -mLs -mRtpf -p -ftb -fh!

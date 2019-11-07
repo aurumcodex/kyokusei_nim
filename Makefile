@@ -1,6 +1,6 @@
 # ========== 極性 -Kyokusei- ============================= Makefile ============================== #
 #            template from devkitARM examples, modified to suit library use                        #
-# __________ current version: 0.0.0-20190919 _____________________________________________________ #
+# __________ current version: 0.1.0-20191106 _____________________________________________________ #
 
 # ----------------------- suffix setting --------------------------------------------------------- #
 .SUFFIXES:
@@ -21,12 +21,13 @@ include $(DEVKITARM)/gba_rules
 
 # ----------------------- set source directories ------------------------------------------------- #
 TARGET		:= $(notdir $(CURDIR))
+TARGETS		:= $(TARGET).elf $(TARGET).gba $(TARGET).sav
 BUILD		:= build
 SOURCES		:= C_source
 INCLUDES	:= include
 BIN_DATA	:=
-AUDIO		:= #audio
-GRAPHICS	:= gfx
+AUDIO		:= audio
+GRAPHICS	:= src/gfx
 BOOK		:= book
 
 # ----------------------- code gen options ------------------------------------------------------- #
@@ -41,7 +42,7 @@ ASFLAGS		:= -g $(ARCH)
 LDFLAGS		:= -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 # ----------------------- libraries and lib_dirs ------------------------------------------------- #
-LIBS		:= -ltonc #-lmm
+LIBS		:= -ltonc -lmm
 
 LIBTONC		:= $(DEVKITPRO)/libtonc
 LIBDIRS		:= $(LIBTONC) $(LIBGBA)
@@ -90,29 +91,20 @@ export INCLUDE			:=  $(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 export LIBPATHS			:=  $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 # ----------------------- build targets ---------------------------------------------------------- #
-.PHONY: $(BUILD) clean books
+.PHONY: $(BUILD) clean
 
-all : $(BUILD) #books
+all : $(BUILD)
 
 $(BUILD):
-	@printf "$(BLD_BLU)::\033[0m \033[1mMaking GBA ROM...\033[0m\n"
 	@[ -d $@ ] || mkdir -p $@
-# 	@nim c src/kyokusei_nim.nim
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-	@printf "$(BLD_GRN)::\033[0m \033[1mkyokusei.gba created.\033[0m\n"
+	@printf "\n$(BLD_PRP)::\033[0m \033[1;4mCompiling generated C files...\033[0m\n"
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -s
+	@printf "\n$(BLD_GRN)::\033[0m \033[1mkyokusei.gba created.\033[0m\n\n"
 
 clean:
-	@printf "\n$(BLD_BLU)::\033[0m \033[1mcleaning files...\033[0m\n"
-	@rm -rfv $(BUILD) $(TARGET).elf $(TARGET).gba $(TARGET).sav guidebook.pdf $(SOURCES)
-	@printf "$(BLD_GRN)::\033[0m \033[1mproject cleaned.\033[0m\n\n"
-
-# books : guidebook.pdf
-
-# guidebook.pdf:
-# 	@printf "\n$(BLD_BLU)::\033[0m \033[1mmaking guidebook...\033[0m"
-# 	@pandoc $(MDFILES) -H $(BOOK)/header_incl.tex -B $(BOOK)/body_incl.tex \
-# 	-V geometry:margin=2cm --pdf-engine=xelatex -o $@
-# 	@printf " $(BLD_GRN)PDF created.\033[0m\n"
+	@printf "\n$(BLD_BLU)::\033[0m \033[1mcleaning files...\033[0m\n\n"
+	@rm -rfv $(BUILD) $(TARGETS) guidebook.pdf $(SOURCES) $(GRAPHICS)/*.bin
+	@printf "\n$(BLD_GRN)::\033[0m \033[1mproject cleaned.\033[0m\n\n"
 
 else
 
