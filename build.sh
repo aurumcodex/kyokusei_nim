@@ -69,4 +69,4 @@ fi
 
 # result printing
 printf "${CLR_CYAN}>>${RESET} ${BOLD}build script compilation done.${RESET}\n"
-printf "${CLR_CYAN}>>${RESET} ${BOLD}time taken${RESET}: ${SECONDS} seconds.\n"
+printf "${CLR_CYAN}>>${RESET} ${BOLD}time taken${RESET}: ${SECONDS} second(s).\n"

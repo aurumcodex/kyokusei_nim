@@ -2,31 +2,31 @@
 // a semi-exhaustive list of things that need to be done/implemented by 11.20.2019.
 // this is for all intents and purposes, a tenative list of TODOs.
 
-Remaining Items: approx. *37*
-Estimated Feature Completeness: *x%*
+Remaining Items: approx. *35*
+Estimated Feature Completeness: *1%*
 
 == Features Remaining = [13]
-- [ ] Sprite Animation
-- [ ] Collision Detection
-- [ ] Gravity Shifting Bot Gameplay Mechanics
+- [ ] Sprite Animation (3 sprites will be actually "animated")
+- [ ] Collision Detection (should be next priority)
+- [ ] Gravity Shifting Bot Gameplay Mechanics (this and the next item will be developed concurrently)
 - [ ] Forme Shifting Player Gamplay Mechanics
-- [ ] Background Changing
-- [ ] Projectile Firing and Associated Mechanics
+- [ ] Background Changing (this might be a tricky thing to do)
+- [ ] Projectile Firing and Associated Mechanics (seems easy enough?)
 ** [ ] Collision
 ** [ ] Damage Calculation
-- [ ] Player Movement
+- [ ] Player Movement 
 - [ ] Enemy Movement
-- [ ] Item Use
-- [ ] "GAME OVER" states
-- [ ] Saving (optional)
+- [ ] Item Use or Collection and Use-on-collect
+- [ ] "GAME OVER" states (optional?) 
+- [ ] Saving (optional) (can be done in an hour to 2)
 
 
 === Sprite Related
 // NOT a rendering related thing; TODOs for loading sprites and making sprites
 - [ ] add "animation frames" to the Echo sprite
 - [ ] add "animation frames" to the Bot sprite (Era)
-- [ ] work on level design, time willing
-- [ ] add the pumpkin back
+- [ ] work on level design, time allowing(?)
+- [x] add the pumpkin back
 
 === Mechanic Related
 // related TODOs for the mechanics within the game
@@ -34,7 +34,7 @@ Estimated Feature Completeness: *x%*
 ** [ ] gunfire in Keen Forme
 ** [ ] slashing in Impusle Forme
 - [ ] take damage and deal damage
-- [ ] use items
+- [ ] use/collect items
 
 === Logic Related
 // idk what counts as "logic," tbh
@@ -44,9 +44,10 @@ Estimated Feature Completeness: *x%*
 === Rendering Related
 // rendering function TODOs.
 - [ ] figure out how to do animation of sprites (experiement with slime)
-- [ ] figure out how to render backgrounds properly
+- [x] figure out how to render backgrounds properly
 - [ ] figure out how to _move_ the background(s) around
 - [ ] figure out how to move the viewport/camera around and have it centered on the (current) player sprite
+- [ ] deal with text rendering workarounds with the backgrounds
 - [ ] print "GAME OVER" when player (Echo) dies (the bot can just respawn)
 - [ ] render pause menu
 - [ ] render item menu

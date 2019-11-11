@@ -11,15 +11,13 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
-import system
-import strutils
-
 import tonc
 import tonc/maxmod
 
 import actors
-import rendering      # also imports the sprites, since that's chained in.
+import geometry
 import panicoverride
+import rendering      # also imports the sprites, since that's chained in.
 import text
 import utility
 
@@ -32,18 +30,20 @@ var
 var
   rID = riOne
 
-# var
-  # positionXInfo = "X = "
-  # positionYInof = "Y = "
-  # xInfo = $posVec.x
-  # yInfo = $posVec.y
-
-# proc copyString() =
-#   discard
-
 # importSoundbank()
 var soundbankBin* {.importc:"soundbank_bin", header:"soundbank_bin.h".}: pointer
 var modSpacecat* {.importc:"MOD_SPACECAT", header:"soundbank.h".}: uint
+var modFlatOutLies* {.importc:"MOD_FLAT_OUT_LIES", header:"soundbank.h".}: uint
+
+var player = (objID: 0,
+              spriteIndex: 0,
+              HP: 10, 
+              AP: 10, 
+              pos: vec2i(10, 10), 
+              height: 32, 
+              width: 16)
+
+# var slime = (objID)
 
 proc main() =
   irqInit()
@@ -51,17 +51,14 @@ proc main() =
 
   discard irqAdd(II_VBLANK, maxmod.vblank)
 
-  REG_BG0CNT = BG_CBB(0) or BG_SBB(0) or BG_4BPP or BG_REG_64x32
-  REG_DISPCNT = DCNT_BG0 or DCNT_OBJ or DCNT_OBJ_1D
-
   tteInitCon()
 
   loadObjSprites()
   loadObjPalettes()
 
   oamMem[0].setAttr(
-    ATTR0_Y(posVec.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(posVec.x.uint16) or ATTR1_SIZE_16,
+    ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+    ATTR1_X(player.pos.x.uint16) or ATTR1_SIZE_16,
     ATTR2_ID(1) or ATTR2_PALBANK(0)
   )
 
@@ -83,26 +80,43 @@ proc main() =
     ATTR2_ID(37) or ATTR2_PALBANK(4)
   )
 
-  tteInitChr4cDefault(0, BG_CBB(9) or BG_SBB(28))
+  oamMem[4].setAttr(
+    ATTR0_Y(slimePos.y.uint16 + 30) or ATTR0_4BPP or ATTR0_SQUARE,
+    ATTR1_X(slimePos.x.uint16 - 20) or ATTR1_SIZE_32x32,
+    ATTR2_ID(513) or ATTR2_PALBANK(3)
+  )
+
+  tteInitCon()
+  tteInitChr4cDefault(0, BG_CBB(4) or BG_SBB(10))
+  tteSetMargins(16, 60, 224, 160)
   tteWrite("#{P:92,68}")
   tteWrite("I'M ON A SCREEEEEEEEEEN")
   tteWrite("#{P:92,100}")
   tteWrite("WEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+  tteWrite("#{P:10,100}test printing mapping thing")
 
   loadBGTiles(rID)
   loadBGPalettes(rID)
   loadBGMap(rID)
 
+  REG_BG0CNT = BG_CBB(0) or BG_SBB(20) or BG_4BPP or BG_REG_64x32
+  REG_BG1CNT = BG_CBB(4) or BG_SBB(10) or BG_4BPP
+  REG_DISPCNT = DCNT_MODE0 or DCNT_BG0 or DCNT_BG1 or DCNT_OBJ or DCNT_OBJ_1D
+  REG_BG0VOFS = 96
+
+  # initialize the MaxMod playback with default settings and with the soundbank files,
+  # then starts playing the .mod file called "spacecat."
   maxmod.init(soundbankBin, 8)
   maxmod.start(modSpacecat, MM_PLAY_LOOP)
 
   while true:
+    # loadBGMap(riOne)
     keyPoll()
 
-    if keyIsDown(KEY_LEFT): posVec.x -= 1
-    if keyIsDown(KEY_RIGHT): posVec.x += 1
-    if keyIsDown(KEY_UP): posVec.y -= 1
-    if keyIsDown(KEY_DOWN): posVec.y += 1
+    if keyIsDown(KEY_LEFT): player.pos.x -= 1
+    if keyIsDown(KEY_RIGHT): player.pos.x += 1
+    if keyIsDown(KEY_UP): player.pos.y -= 1
+    if keyIsDown(KEY_DOWN): player.pos.y += 1
 
     if keyIsDown(KEY_A): slimePos.y -= 1
     if keyIsDown(KEY_B): slimePos.y += 1
@@ -114,43 +128,15 @@ proc main() =
       displayText(1)
       # tteEraseScreen()
 
-    if keyIsUp(KEY_SELECT) and frameCount > 600'u:
-      # displayText(0)
+    if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
+      maxmod.stop()
+      maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
+
+    if keyIsUp(KEY_SELECT) and frameCount > 300'u:
       tteEraseScreen()
 
-    if frameCount mod 20 == 10:
-      case rID:
-        of riOne: rID = riTwo
-        of riTwo: rID = riThree
-        of riThree: rID = riFour
-        of riFour: rID = riOne
-
-    # loadBGTiles(rID)
-    # loadBGPalettes(riOne)
-    # loadGBMap(riOne)
-
-    # tteWrite("#{P:10,10}")
-    # tte
-    # tteWrite("x =")
-    # printf("#{P:90,90}")
-
-    # tteWrite(cstringArrayToSeq(positionXInfo.items))
-
-    # tteWriteEx(90, 90, "X = {posVec.x}, Y = {posVec.y}", CLR_CYAN)
-
-    # displayText(frameCount)
-
-    oamMem[0].setPos(posVec)
+    oamMem[0].setPos(player.pos)
     oamMem[3].setPos(slimePos)
-    # oamMem[3].setAttr(
-    #   ATTR0_Y(slimePos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    #   ATTR1_X(slimePos.x.uint16) or ATTR1_SIZE_16x16,
-    #   ATTR2_ID(slimeIndex) or ATTR2_PALBANK(4)
-    # )
-    # oamMem[3].attr2 = 
-
-    # if frameCount mod 10 == 0:
-    #   tteEraseScreen()
 
     maxmod.frame()
 

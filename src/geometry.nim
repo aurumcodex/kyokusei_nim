@@ -16,10 +16,12 @@ import tonc
 type
   Box* {.bycopy.} = object
     ## A box that will surround any given sprite.
-    boundLeft*: uint
-    boundRight*: uint
-    boundTop*: uint
-    boundBottom*: uint
+    width*: uint
+    height*: uint
+    # boundLeft*: uint
+    # boundRight*: uint
+    # boundTop*: uint
+    # boundBottom*: uint
     # top_left*: Vec2i
     # bottom_right*: Vec2i
 

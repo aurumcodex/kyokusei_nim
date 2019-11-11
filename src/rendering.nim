@@ -16,17 +16,40 @@ import tonc
 import sprites
 
 type
+  Viewport* = tuple
+    x: int
+    xMin: int
+    xMax: int
+    xPage: int
+    y: int
+    yMin: int
+    yMax: int
+    yPage: int
+
+# type
+
+
+type
   RoomId* = enum
     riOne
     riTwo
     riThree
     riFour
 
+    
+proc setViewportPos(vp: var Viewport, x, y: int) =
+  vp.x = clamp(x, vp.xMin, vp.xMax - vp.xPage)
+  vp.y = clamp(y, vp.yMin, vp.yMax - vp.yPage)
+
+proc centerViewport(vp: var Viewport, x, y: int) =
+  vp.setViewportPos(x - vp.xPage div 2, y - vp.yPage div 2)
+      
 proc loadObjSprites*() =
   ## Function to load sprite data into respective sprite location banks.
-  memcpy32(addr tileMemObj[0][0], BotTiles, BotTiles.len div 4)
+  memcpy32(addr tileMemObj[0][0], BotTiles, BotTiles.len)
   memcpy32(addr tileMemObj[0][5], EchoTiles, EchoTiles.len div 4)
   memcpy32(addr tileMemObj[0][14], EnemyChronchaTiles, EnemyChronchaTiles.len div 4)
+  memcpy32(addr tileMemObj[1][0], PumpkinTiles, PumpkinTiles.len div 4)
   memcpy32(addr tileMemObj[0][36], EnemySlimeTiles, EnemySlimeTiles.len div 4)
   memcpy32(addr tileMemObj[0][77], EnemyTrentTiles, EnemyTrentTiles.len div 4)
 
@@ -35,6 +58,7 @@ proc loadObjPalettes*() =
   memcpy16(addr palObjBank[0], BotPalette, BotPalette.len div 2)
   memcpy16(addr palObjBank[1], EchoPalette, EchoPalette.len div 2)
   memcpy16(addr palObjBank[2], EnemyChronchaPalette, EnemyChronchaPalette.len div 2)
+  memcpy16(addr palObjBank[3], PumpkinPallete, PumpkinPallete.len div 2)
   memcpy16(addr palObjBank[4], EnemySlimePalette, EnemySlimePalette.len div 2)
   memcpy16(addr palObjBank[6], EnemyTrentPalette, EnemyTrentPalette.len div 2)
 
@@ -62,16 +86,17 @@ proc loadBGPalettes*(rid: RoomId) =
       memcpy16(addr palBgBank[0][0], Room4Palette, Room4Palette.len div 12)
 
 proc loadBGMap*(rid: RoomID) =
+  ## Function to load in the mapping data for the backgrounds.
   case rid:
     of riOne:
       # BG_BUILD
-      memcpy32(addr seMem[0][0], Room1Map, Room1Map.len)
+      memcpy32(addr seMem[20][0], Room1Map, Room1Map.len)
     of riTwo:
-      memcpy32(addr seMem[0][0], Room2Map, Room2Map.len)
+      memcpy32(addr seMem[28][0], Room2Map, Room2Map.len)
     of riThree:
-      memcpy32(addr seMem[0][0], Room3Map, Room3Map.len)
+      memcpy32(addr seMem[28][0], Room3Map, Room3Map.len)
     of riFour:
-      memcpy32(addr seMem[0][0], Room4Map, Room4Map.len)
+      memcpy32(addr seMem[28][0], Room4Map, Room4Map.len)
 
 # proc loadGBMap*() =
 #   memcpy32(addr )
