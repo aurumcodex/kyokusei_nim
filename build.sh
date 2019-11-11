@@ -6,7 +6,7 @@
 readonly RESET="\033[0m"
 readonly BLD_ULINE="\033[1;4m"
 readonly BOLD="\033[1m"
-readonly BLD_YLW="\033p1;33m"
+readonly BLD_YLW="\033[1;33m"
 readonly BLD_BLUE="\033[1;34m"
 readonly BLD_PURP="\033[1;35m"
 readonly CLR_RED="\033[31m"

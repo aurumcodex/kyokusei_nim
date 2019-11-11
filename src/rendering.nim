@@ -75,6 +75,7 @@ proc loadBGTiles*(rid: RoomId) =
       memcpy32(addr tileMem[0][0], Room4Tiles, Room4Tiles.len div 4)
 
 proc loadBGPalettes*(rid: RoomId) =
+  ## Function to load in the palettes for the backgrounds conditionally, based on .
   case rid:
     of riOne:
       memcpy16(addr palBgBank[0][0], Room1Palette, Room1Palette.len div 12)

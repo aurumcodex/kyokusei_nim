@@ -18,27 +18,18 @@ const
   Room2Tiles*: cstring = staticRead("gfx/bg_room2.img.bin")
   Room3Tiles*: cstring = staticRead("gfx/bg_room3.img.bin")
   Room4Tiles*: cstring = staticRead("gfx/bg_room4.img.bin")
-  BrinTiles*: cstring = staticRead("gfx/bg_brin-full.img.bin")
-  KakarikoTiles*: cstring = staticRead("gfx/kakariko.img.bin")
-
-# var Room1Tiles* {.importc: "bg_room1Tiles", header: "gfx/bg_room1.h".}: array[304, uint16]
-# var BrinTiles* {.importc: "bg_brin_fullTiles", header: "gfx/bg_brin-full.h".}: array[496, uint16]
   
 const
   Room1Palette*: cstring = staticRead("gfx/bg_room1.pal.bin")
   Room2Palette*: cstring = staticRead("gfx/bg_room2.pal.bin")
   Room3Palette*: cstring = staticRead("gfx/bg_room3.pal.bin")
   Room4Palette*: cstring = staticRead("gfx/bg_room4.pal.bin")
-  BrinPalette*: cstring = staticRead("gfx/bg_brin-full.pal.bin")
-  KakarikoPalette*: cstring = staticRead("gfx/kakariko.pal.bin")
   
 const
   Room1Map*: cstring = staticRead("gfx/bg_room1.map.bin")
   Room2Map*: cstring = staticRead("gfx/bg_room2.map.bin")
   Room3Map*: cstring = staticRead("gfx/bg_room3.map.bin")
   Room4Map*: cstring = staticRead("gfx/bg_room4.map.bin")
-  BrinMap*: cstring = staticRead("gfx/bg_brin-full.map.bin")
-  # Room1Map* {.importc: ""
   
 const
   BotTiles*: cstring = staticRead("gfx/bot.img.bin")
