@@ -13,6 +13,8 @@
 
 import tonc
 
+import actors
+import geometry
 import sprites
 
 type
@@ -31,6 +33,8 @@ type
 
 type
   RoomId* = enum
+    ## An enum type for determing which backgrounds to load in the dedicated
+    ## rendering functions for the backgrounds.
     riOne
     riTwo
     riThree
@@ -38,10 +42,12 @@ type
 
     
 proc setViewportPos(vp: var Viewport, x, y: int) =
+  ## Procedure to set the viewport's location.
   vp.x = clamp(x, vp.xMin, vp.xMax - vp.xPage)
   vp.y = clamp(y, vp.yMin, vp.yMax - vp.yPage)
 
 proc centerViewport(vp: var Viewport, x, y: int) =
+  ## Procedure to center the viewport.
   vp.setViewportPos(x - vp.xPage div 2, y - vp.yPage div 2)
       
 proc loadObjSprites*() =
@@ -101,3 +107,17 @@ proc loadBGMap*(rid: RoomID) =
 
 # proc loadGBMap*() =
 #   memcpy32(addr )
+
+proc moveScreen*(player: var Player, bgVec: var Offsets) =
+  if player.pos.x+player.width == SCREEN_WIDTH:
+    bgVec.xOffset += SCREEN_WIDTH
+    REG_BG0HOFS = cast[uint16](bgVec.xOffset)
+    # for i in 0..<SCREEN_WIDTH:
+    #   if i mod 2 == 0:
+    #     REG_BG0HOFS += 2
+  if player.pos.x == 0:
+    bgVec.xOffset -= SCREEN_WIDTH
+    REG_BG0HOFS = cast[uint16](bgVec.xOffset)
+    # for i in 0..<SCREEN_WIDTH:
+    #   if i mod 2 == 0:
+    #     REG_BG0HOFS -= 2

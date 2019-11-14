@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-10-24
+  Date Modified: 2019-11-11
 
   ## [Geometry File]
   A file used for dealing with collision and other mathematical functions
@@ -13,23 +13,15 @@
 
 import tonc
 
-type
-  Box* {.bycopy.} = object
-    ## A box that will surround any given sprite.
-    width*: uint
-    height*: uint
-    # boundLeft*: uint
-    # boundRight*: uint
-    # boundTop*: uint
-    # boundBottom*: uint
-    # top_left*: Vec2i
-    # bottom_right*: Vec2i
+# import actors
 
-proc hasCollided*(player: Box, obj: Box): bool =
-  ## A function to determine if the player has collided with anything
-  # TODO: implement collision detection
-  # if player.top_left.x + player.width == obj.top_left.x:
-  #   result = true
-  # elif player.top_left.y + player.height == obj.top_left.y:
-  #   result = false
-  # elif player.bottom_right
+type
+  Box* = tuple
+    ## A box that will surround any given sprite.
+    topVect: Vec2i
+    bottomVect: Vec2i # this one is basically topVect + the width and height of the sprite.
+
+type
+  Offsets* = object
+    xOffset*: int
+    yOffset*: int

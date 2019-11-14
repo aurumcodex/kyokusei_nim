@@ -25,7 +25,7 @@ Estimated Feature Completeness: *1%*
 // NOT a rendering related thing; TODOs for loading sprites and making sprites
 - [ ] add "animation frames" to the Echo sprite
 - [ ] add "animation frames" to the Bot sprite (Era)
-- [ ] work on level design, time allowing(?)
+- [ ] work on level design, time allowing(?) (needs to happen for "illusion" to work properly)
 - [x] add the pumpkin back
 
 === Mechanic Related
@@ -43,11 +43,12 @@ Estimated Feature Completeness: *1%*
 
 === Rendering Related
 // rendering function TODOs.
+//priority
 - [ ] figure out how to do animation of sprites (experiement with slime)
 - [x] figure out how to render backgrounds properly
-- [ ] figure out how to _move_ the background(s) around
-- [ ] figure out how to move the viewport/camera around and have it centered on the (current) player sprite
-- [ ] deal with text rendering workarounds with the backgrounds
+- [ ] figure out how to _move_ the background(s) around (more like jump around, but it's still moving)
+- [ ] figure out how to move the viewport/camera around and have it centered on the (current) player sprite (may not be needed per se)
+- [ ] deal with text rendering workarounds with the backgrounds (needs to be done, otherwise, garbage will constantly be displayed)
 - [ ] print "GAME OVER" when player (Echo) dies (the bot can just respawn)
 - [ ] render pause menu
 - [ ] render item menu
@@ -63,3 +64,6 @@ Estimated Feature Completeness: *1%*
 - [ ] create ability to detect collision
 - [ ] be able to stop when colliding with something
 - [ ] take damage with collision if enemy or area hazard
+
+=== MISCELLANEOUS
+- [ ] play some other gba games via mGBA to see how the tiles and stuff are layed out.
