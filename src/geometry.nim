@@ -25,3 +25,15 @@ type
   Offsets* = object
     xOffset*: int
     yOffset*: int
+
+type
+  Submap* {.pure.}= enum
+    ## A pure enum type for the various "submaps" of the backgrounds.
+    ## Used for various changes to the background offsets, and for determining which
+    ## collision function(s) to use.
+    sectionOne
+    sectionTwo
+    sectionThree
+    sectionFour
+    sectionFive
+    sectionSix

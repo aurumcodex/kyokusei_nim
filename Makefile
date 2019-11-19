@@ -23,7 +23,8 @@ include $(DEVKITARM)/gba_rules
 TARGET		:= $(notdir $(CURDIR))
 TARGETS		:= $(TARGET).elf $(TARGET).gba $(TARGET).sav
 BUILD		:= build
-SOURCES		:= C_source
+C_SOURCES	:= C_source
+SOURCES		:= ${C_SOURCES} src/c_files
 INCLUDES	:= include
 BIN_DATA	:=
 AUDIO		:= audio
@@ -98,12 +99,13 @@ all : $(BUILD)
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@printf "\n$(BLD_PRP)::\033[0m \033[1;4mCompiling generated C files...\033[0m\n"
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -s
+#	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile -s
+	@$(MAKE) -C $(BUILD) -f $(CURDIR)/Makefile -s
 	@printf "\n$(BLD_GRN)::\033[0m \033[1mkyokusei.gba created.\033[0m\n\n"
 
 clean:
 	@printf "\n$(BLD_BLU)::\033[0m \033[1mcleaning files...\033[0m\n\n"
-	@rm -rfv $(BUILD) $(TARGETS) guidebook.pdf $(SOURCES) $(GRAPHICS)/*.bin
+	@rm -rfv $(BUILD) $(TARGETS) guidebook.pdf $(C_SOURCES) $(GRAPHICS)/*.bin
 	@printf "\n$(BLD_GRN)::\033[0m \033[1mproject cleaned.\033[0m\n\n"
 
 else

@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-10-23
+  Date Modified: 2019-11-18
 
   ## [Sprites File]
   A file used for keeping the sprite data and palette data
@@ -35,6 +35,10 @@ const
   BotTiles*: cstring = staticRead("gfx/bot.img.bin")
   EchoTiles*: cstring = staticRead("gfx/echo.img.bin")
   PumpkinTiles*: cstring = staticRead("gfx/pumpkin.img.bin")
+  UIHeartTiles*: cstring = staticRead("gfx/ui_heart.img.bin")
+  ObjBladeSlashTiles*: cstring = staticRead("gfx/obj_bladeslash.img.bin")
+  ObjBulletTiles*: cstring = staticRead("gfx/obj_bullet.img.bin")
+  ObjHealthTiles*: cstring = staticRead("gfx/obj_health.img.bin")
   EnemyChronchaTiles*: cstring = staticRead("gfx/emy_chroncha.img.bin")
   EnemyNaniteWaveTiles*: cstring = staticRead("gfx/emy_nanite_wave.img.bin")
   EnemySentryTiles*: cstring = staticRead("gfx/emy_sentry.img.bin")
@@ -44,13 +48,13 @@ const
 const
   BotPalette*: cstring = staticRead("gfx/bot.pal.bin")
   EchoPalette*: cstring = staticRead("gfx/echo.pal.bin")
-  PumpkinPallete*: cstring = staticRead("gfx/pumpkin.pal.bin")
+  PumpkinPalette*: cstring = staticRead("gfx/pumpkin.pal.bin")
+  UIHeartPalette*: cstring = staticRead("gfx/ui_heart.pal.bin")
+  ObjBladeSlashPalette*: cstring = staticRead("gfx/obj_bladeslash.pal.bin")
+  ObjBulletPalette*: cstring = staticRead("gfx/obj_bullet.pal.bin")
+  ObjHealthPalette*: cstring = staticRead("gfx/obj_health.pal.bin")
   EnemyChronchaPalette*: cstring = staticRead("gfx/emy_chroncha.pal.bin")
   EnemyNaniteWavePalette*: cstring = staticRead("gfx/emy_nanite_wave.pal.bin")
   EnemySentryPalette*: cstring = staticRead("gfx/emy_sentry.pal.bin")
   EnemySlimePalette*: cstring = staticRead("gfx/emy_slime.pal.bin")
   EnemyTrentPalette*: cstring = staticRead("gfx/emy_trent.pal.bin")
-
-# place these back in rendering.nim later
-#memcpy32(addr tileMemObj[0][31], EnemySentryTiles, EnemySentryTiles.len div 4)
-#memcpy16(addr palObjBank[3], EnemySentryPalette, EnemySentryPalette.len div 2)

@@ -2,15 +2,16 @@
 // a semi-exhaustive list of things that need to be done/implemented by 11.20.2019.
 // this is for all intents and purposes, a tenative list of TODOs.
 
-Remaining Items: approx. *35*
+Remaining Items: approx. *36*
 Estimated Feature Completeness: *1%*
 
 == Features Remaining = [13]
-- [ ] Sprite Animation (3 sprites will be actually "animated")
+- [ ] Sprite Animation (3 sprites will be actually "animated" (maybe))
 - [ ] Collision Detection (should be next priority)
 - [ ] Gravity Shifting Bot Gameplay Mechanics (this and the next item will be developed concurrently)
 - [ ] Forme Shifting Player Gamplay Mechanics
 - [ ] Background Changing (this might be a tricky thing to do)
+** [x] Shift Background Display
 - [ ] Projectile Firing and Associated Mechanics (seems easy enough?)
 ** [ ] Collision
 ** [ ] Damage Calculation
@@ -26,6 +27,7 @@ Estimated Feature Completeness: *1%*
 - [ ] add "animation frames" to the Echo sprite
 - [ ] add "animation frames" to the Bot sprite (Era)
 - [ ] work on level design, time allowing(?) (needs to happen for "illusion" to work properly)
+- [x] figure out how sprite animation's even gonna work to begin with (easier than i thought)
 - [x] add the pumpkin back
 
 === Mechanic Related
@@ -39,19 +41,23 @@ Estimated Feature Completeness: *1%*
 === Logic Related
 // idk what counts as "logic," tbh
 - [ ] get and use items and apply effects to player
-- [ ] check if player is dead or if enemy is dead
+- [ ] check if player is dead and/or if enemy is dead
+- [ ] save high score on successful run
 
 === Rendering Related
 // rendering function TODOs.
 //priority
-- [ ] figure out how to do animation of sprites (experiement with slime)
+- [x] figure out how to do animation of sprites (experiement with slime)
 - [x] figure out how to render backgrounds properly
-- [ ] figure out how to _move_ the background(s) around (more like jump around, but it's still moving)
+- [x] figure out how to _move_ the background(s) around (more like jump around, but it's still "moving")
 - [ ] figure out how to move the viewport/camera around and have it centered on the (current) player sprite (may not be needed per se)
-- [ ] deal with text rendering workarounds with the backgrounds (needs to be done, otherwise, garbage will constantly be displayed)
+- [x] deal with text rendering workarounds with the backgrounds (needs to be done, otherwise, garbage will constantly be displayed)
+** [x] fix the rendering issues with displaying the tiles for the background(s).
 - [ ] print "GAME OVER" when player (Echo) dies (the bot can just respawn)
 - [ ] render pause menu
-- [ ] render item menu
+- [ ] render item menu (optional, might just make "items" be health pickups instead)
+- [ ] render fade-ins and fade-outs
+- [ ] render score and health
 
 === Input Related
 // TODOs for input stuff
@@ -61,9 +67,9 @@ Estimated Feature Completeness: *1%*
 
 === Geometry Related
 // TODOs for geometry checks and the like
-- [ ] create ability to detect collision
-- [ ] be able to stop when colliding with something
+- [ ] create ability to detect collision (started)
+- [ ] be able to stop when colliding with something (started)
 - [ ] take damage with collision if enemy or area hazard
 
 === MISCELLANEOUS
-- [ ] play some other gba games via mGBA to see how the tiles and stuff are layed out.
+- [ ] play some other gba games via mGBA to see how the tiles and stuff are layed out. (optional)

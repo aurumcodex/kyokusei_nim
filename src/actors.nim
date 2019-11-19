@@ -26,18 +26,16 @@ type
     pKeen
 
 type
-  Stats* = tuple
+  Stats* = object
     maxHP: int
     maxAP: int
-    curHP: int
-    curAP: int
     atk: int
     def: int
 
-# type
-#   Actor* = ref object of RootObj
-#     spriteIndex*: int
-#     bounds*: Box
+type
+  AnimState* = enum
+    asIdle
+    asMove
 
 type
   Player* = object
@@ -50,40 +48,45 @@ type
     height*: int
     width*: int
     # bounds: Box
-    # stats: Stats
-    # gravity*: Gravity
-    # polarity*: Polarity
+    stats: Stats
+    gravity*: Gravity
+    polarity*: Polarity
 
 type
   Enemy* = object
     ## An Enemy data type that holds various points of data.
-    objID*: uint
+    objID*: uint8
     spriteIndex*: uint16
+    animState*: AnimState
     HP*: int
     AP*: int
     pos*: Vec2i
     height*: int
     width*: int
-    # stats: Stats
-
+    stats: Stats
+    
+proc manhattanDistance*(player: Player, enemy: Enemy): int =
+  ## Function to asisst in determining the shortest distance to the player sprite from an enemy.
+  result = abs(player.pos.x - enemy.pos.x) + abs(player.pos.y - player.pos.y)
     
 proc xCollision*(p: Player, e: Enemy): bool =
+  ## Detect if collision occurs in terms of X position.
   return ((e.pos.x > p.pos.x) and (e.pos.x < p.pos.x+p.width)) or
          ((e.pos.x+e.width > p.pos.x) and (e.pos.x+e.width < p.pos.x+p.width))
 
 proc yCollision*(p: Player, e: Enemy): bool =
+  ## Detect if collision occurs in terms of Y position.
   return ((e.pos.y > p.pos.y) and (e.pos.y < p.pos.y+p.height)) or
          ((e.pos.y+e.height > p.pos.y) and (e.pos.y+e.height < p.pos.y+p.height))
 
 proc hasCollided*(player: Player, enemy: Enemy, frames: uint): bool =
-  ## A function to determine if the player has collided with anything
+  ## A function to determine if the player has collided with any object sprites.
   if frames mod 2 == 0:
     result = xCollision(player, enemy) and yCollision(player, enemy)
 
-proc manhattanDistance*(player: Player, enemy: Enemy): int =
-  ## Function to asisst in determining the shortest distance to the player sprite from an enemy.
-  result = abs(player.pos.x - enemy.pos.x) + abs(player.pos.y - player.pos.y)
-
+proc roomOneCollision*(submap: Submap): bool =
+  ## Checks the 
+  return false
 
 proc backgroundCollision*(player: var Player, frameCount: uint) =
   if frameCount mod 3 == 0:
@@ -95,3 +98,4 @@ proc backgroundCollision*(player: var Player, frameCount: uint) =
       player.pos.y = 0
     elif player.pos.y + player.height >= 144:
       player.pos.y = 144-player.height
+

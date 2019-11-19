@@ -16,12 +16,21 @@ import actors
 import geometry
 
 proc tteInitCon*() {.importc: "tte_init_con", header: "tonc.h".}
+  ## Import and wrap the tte_init_con function from the tonclib header(s).
 
 type
-  Game = object
-    frameCount: uint
-    player: Player
-    bgOffsets: Offsets
+  GameState* = enum
+    gsTitle
+    gsGameplay
+    gsPause
+    gsGameOver
+
+type
+  Game* = object
+    frameCount*: uint
+    player*: Player
+    bgOffsets*: Offsets
+    state*: GameState
 
 # If this isn't "found," then eihter it's a new game, or the save is corrupted.
 const sramHeader: cstring = "kyokusei_nim" ## Validation: header string for confirming data in SRAM.
