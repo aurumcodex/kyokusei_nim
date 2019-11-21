@@ -16,6 +16,9 @@ import tonc
 import actors
 import geometry
 import sprites
+import ffi_c
+
+# include rendering/collision
 
 # type
 #   Viewport* {.bycopy.} = object
@@ -109,8 +112,8 @@ proc loadBGPalettes*(rid: RoomId) =
 
 proc loadBGMap*(rid: RoomID) =
   ## Function to load in the mapping data for the backgrounds.
-  ## NOTE: There's a significantly better and more efficient way of doing this, but I couldn't get it to work without
-  ## ruining the text.
+  ## NOTE: There's a significantly better and more efficient way of doing this,
+  ## but I couldn't get it to work withou ruining the text.
   case rid:
     of riOne:
       memcpy32(addr seMem[20][0], Room1Map, Room1Map.len)
@@ -125,40 +128,51 @@ proc loadBGMap*(rid: RoomID) =
 
 proc shiftScreenUp*(player: var Player, bgVec: var Offsets, room: var Room) =
   ## Helper function to shift the screen upwards.
+  var section: uint = 0
   case room.submap:
   of sectionOne:
     bgVec.yOffset -= SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     player.pos.y = SCREEN_HEIGHT - player.height
     room.submap = sectionFive
+    # section = 1
+    # printSection(section)
     # discard
   of sectionTwo:
     bgVec.yOffset -= SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     player.pos.y = SCREEN_HEIGHT - player.height
     room.submap = sectionSix
-    # player.po
-    # discard
+    # section = 2
+    # printSection(section)
   of sectionThree:
     bgVec.yOffset -= SCREEN_HEIGHT
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     player.pos.y = SCREEN_HEIGHT - player.height
     room.submap = sectionOne
+    # section = 3
+    # printSection(section)
   of sectionFour:
     bgVec.yOffset -= SCREEN_HEIGHT
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     player.pos.y = SCREEN_HEIGHT - player.height
     room.submap = sectionTwo
+    # section = 4
+    # printSection(section)
   of sectionFive:
     bgVec.yOffset -= SCREEN_HEIGHT
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     player.pos.y = SCREEN_HEIGHT - player.height
     room.submap = sectionThree
+    # section = 5
+    # printSection(section)
   of sectionSix:
     bgVec.yOffset -= SCREEN_HEIGHT
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     player.pos.y = SCREEN_HEIGHT - player.height
     room.submap = sectionFour
+    # section = 6
+    # printSection(section)
 
 proc shiftScreenRight*(player: var Player, bgVec: var Offsets, room: var Room) =
   ## Helper function to shift the screen rightwards.
@@ -218,8 +232,8 @@ proc shiftScreenDown*(player: var Player, bgVec: var Offsets, room: var Room) =
     player.pos.y = 1
     room.submap = sectionSix
   of sectionFive:
-    bgVec.yOffset += SCREEN_HEIGHT
-    # bgVec.yOffset += SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
+    # bgVec.yOffset += SCREEN_HEIGHT
+    bgVec.yOffset += SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
     REG_BG1VOFS = cast[uint16](bgVec.yOffset)
     # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
     player.pos.y = 1

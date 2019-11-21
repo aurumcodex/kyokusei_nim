@@ -20,6 +20,7 @@ proc tteInitCon*() {.importc: "tte_init_con", header: "tonc.h".}
 
 type
   GameState* = enum
+    ## An enum type to set the various states of the game.
     gsTitle
     gsGameplay
     gsPause
@@ -27,10 +28,14 @@ type
 
 type
   Game* = object
+    ## A data type that holds some important data, even though the data is in separate
+    ## variables outside of this struct.
     frameCount*: uint
     player*: Player
     bgOffsets*: Offsets
     state*: GameState
+    hiScore*: uint
+    score*: uint
 
 # If this isn't "found," then eihter it's a new game, or the save is corrupted.
 const sramHeader: cstring = "kyokusei_nim" ## Validation: header string for confirming data in SRAM.
@@ -48,7 +53,7 @@ proc initializeSave*(p: var Player)=
     sramMem[index] = ch.uint8
 
   # SRAM memory location at hex location 0x10 (16) {used for player X position}.
-  sramMem[0x10] = 15
+  sramMem[0x10] = 12
   # SRAM memory location at hex location 0x11 (17) {used for player Y position}.
   sramMem[0x11] = 128
 

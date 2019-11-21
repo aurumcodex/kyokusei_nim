@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-5
+  Date Modified: 2019-11-18
 
   ## [Foreign Function Interface File]
   A file used for various utility functions from C files.
@@ -15,3 +15,5 @@
 
 proc printScore*(score: uint) {.importc: "print_score", header: "../src/c_files/text.h".}
   ## Sends the `score` variable to the C implementation in order to print the score.
+
+proc printSection*(submap: uint) {.importc: "print_section", header: "../src/c_files/text.h".}

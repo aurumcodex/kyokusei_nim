@@ -54,9 +54,10 @@ Estimated Feature Completeness: *1%*
 - [x] deal with text rendering workarounds with the backgrounds (needs to be done, otherwise, garbage will constantly be displayed)
 ** [x] fix the rendering issues with displaying the tiles for the background(s).
 - [ ] print "GAME OVER" when player (Echo) dies (the bot can just respawn)
-- [ ] render pause menu
+- [ ] render pause menu (optional)
 - [ ] render item menu (optional, might just make "items" be health pickups instead)
 - [ ] render fade-ins and fade-outs
+- [ ] render obj sprite as mosaic upon damage
 - [ ] render score and health
 
 === Input Related
@@ -68,8 +69,12 @@ Estimated Feature Completeness: *1%*
 === Geometry Related
 // TODOs for geometry checks and the like
 - [ ] create ability to detect collision (started)
+** [ ] deal with object collision
+** [ ] deal with enemy collision
+** [ ] deal with background collision
 - [ ] be able to stop when colliding with something (started)
 - [ ] take damage with collision if enemy or area hazard
+** [ ] insta-death if contact is with spikes
 
 === MISCELLANEOUS
 - [ ] play some other gba games via mGBA to see how the tiles and stuff are layed out. (optional)

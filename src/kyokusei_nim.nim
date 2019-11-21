@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-5
+  Date Modified: 2019-11-19
 
   ## [Main File]
   The main file for executing the commands/functions/calls/etc.
@@ -17,10 +17,12 @@ import tonc/maxmod
 
 #[Local Imports]#
 import actors
-import ffi_c
+import ffi_c          # will probably be removed
 import geometry
+import input
 import panicoverride
 import rendering      # also imports the sprites, since that's chained in.
+import rendering/collision
 import text
 import utility
 
@@ -33,14 +35,10 @@ asm """
 """
 
 #[Variables]#
-
-# var frameCount: uint = 0
-# var obj_buffer*: ObjAttrPtr = array[128, ObjAttr]
 var rID = riOne
-# var bg0Vec = Offsets(xOffset: 180, yOffset: 0)
 var bg1Vec = Offsets(xOffset: 0, yOffset: 0)
-
 var room = Room(roomID: riOne, submap: sectionOne)
+var section: uint = 0
 
 var
   posVec = vec2i(82, 78)
@@ -54,54 +52,88 @@ var modFlatOutLies* {.importc:"MOD_FLAT_OUT_LIES", header:"soundbank.h".}: uint
   
 var player = Player(objID: 0,
                     spriteIndex: 513'u16,
-                    HP: 10, 
-                    AP: 10, 
-                    pos: vec2i(15, 128), 
-                    height: 16, # 32 when playing as Echo, 16 as Era 
-                    width: 16)
+                    HP: 10,
+                    pos: vec2i(15, 128),
+                    height: 16, # 32 when playing as Echo, 16 as Era
+                    width: 16,
+                    gravity: gNormal,
+                    polarity: pImpulse)
   
 var slime = Enemy(objID: 3,
                   spriteIndex: 549'u16,
                   animState: asIdle,
-                  HP: 10, 
-                  AP: 10, 
-                  pos: vec2i(50, 50), 
-                  height: 16, 
+                  HP: 10,
+                  pos: vec2i(50, 128),
+                  height: 16,
                   width: 16)
   
 var gameInfo = Game(frameCount: 0,
                     player: player,
                     bgOffsets: bg1Vec,
-                    state: gsTitle)
+                    state: gsTitle,
+                    hiScore: 100,
+                    score: 0)
 
-# var slime = (objID)
+proc initialize*() =
+  ## Helper function to lessen some of the boilerplate that would otherwise appear in main().
+  REG_WAITCNT = WS_STANDARD   # Set wait-state of the GBA CPU.
+
+  # Set BG 0 to use the data at charblock 4 and screenblock 10, at a 4 bit depth
+  REG_BG0CNT = BG_CBB(4) or BG_SBB(10) or BG_4BPP
+  # Set BG 1 to use the data at charblock 14 and screenblock 20, at a 4 bit depth with the map set to a 64x64 tile map.
+  REG_BG1CNT = BG_CBB(14) or BG_SBB(20) or BG_4BPP or BG_REG_64x64
+  # Set BG 2 to use the data at charblock x and screenblock y, at a 4 bit depth (used for the title screen)
+  # REG_BG2CNT = BG_CBB() or BG_SBB() or BG_4BPP   # to be added
+  # Set up the Display Controller with all the needed values so that everything can be rendered, and used.
+  REG_DISPCNT = DCNT_MODE0 or DCNT_BG0 or DCNT_BG1 or DCNT_OBJ or DCNT_OBJ_1D
+
+  # Set the background offsets for background 1
+  REG_BG1VOFS = cast[uint16](bg1Vec.yOffset)
+  REG_BG1HOFS = cast[uint16](bg1Vec.xOffset)
+
+  # Check if a save exists, or if it's somehow corrupted, and creates a new save, otherwise
+  # loads the available saved data.
+  if not validateSave(): 
+    initializeSave(player)
+  else:
+    loadSave(player)
+
+  # Initialize the interupts with vsync capabilities, and adds the maxmod worker to it.
+  irqInit()
+  irqEnable(II_VBLANK)
+  discard irqAdd(II_VBLANK, maxmod.vblank)
+
+  # Initialize OAM (onject attribute memory)
+  oamInit(addr oamMem[0], OAM_SIZE div sizeof_ObjAttr)
+
+  # Load Object Sprite tiles and palettes
+  loadObjSprites()
+  loadObjPalettes()
+
+  # Load Background Tiles, Palettes, and Map data
+  loadBGTiles(rID)
+  loadBGPalettes(rID)
+  loadBGMap(rID)
+
+  # Initialize the Tonc Text Engine (Nim wrapped)
+  tteInitCon()
+  tteInitChr4c(0, BG_CBB(4) or BG_SBB(10), 0xF000, 0x0201,
+               CLR_PURPLE shl 16 or CLR_CYAN, addr(verdana9Font), nil)
+  tteSetMargins(0, 0, 240, 100)
+
+
+#[OAM Sprite Setup]#
+proc initializeOAM*() =
+  var count = 0
+  discard
 
 #[Main Game Loop]#
 proc main() =
   ## Main game logic; a sort of "glue" that binds all of the features together.
 
-  # Setting of the wait-states of the GBA's cpu
-  REG_WAITCNT = WS_STANDARD
+  initialize() # Initialize 
 
-  if not validateSave():
-    # tteInitChr4cDefault(0, BG_CBB(4) or BG_SBB(10))
-    # tteSetMargins(16, 60, 224, 160)
-    # tteWrite("{P:120,0}save not found.")
-    initializeSave(player)
-  else:
-    loadSave(player)
-
-  irqInit()
-  irqEnable(II_VBLANK)
-
-  discard irqAdd(II_VBLANK, maxmod.vblank)
-
-  oamInit(addr oamMem[0], OAM_SIZE div sizeof_ObjAttr)
-
-  loadObjSprites()
-  loadObjPalettes()
-
-  oamMem[0].setAttr(
+  oamMem[player.objID].setAttr(
     ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
     ATTR1_X(player.pos.x.uint16) or ATTR1_SIZE_16,
     ATTR2_ID(player.spriteIndex) or ATTR2_PALBANK(0)
@@ -132,28 +164,6 @@ proc main() =
     ATTR2_ID(613) or ATTR2_PALBANK(3)
   )
 
-  tteInitCon()
-  tteInitChr4cDefault(0, BG_CBB(4) or BG_SBB(10))
-  # tteSetDrawg(chr4cDrawgB4CTS)
-  tteSetMargins(8, 0, 224, 160)
-  tteWrite("#{P:92,68}")
-  tteWrite("I'M ON A SCREEEEEEEEEEN")
-  tteWrite("#{P:92,100}")
-  tteWrite("WEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-  tteWrite("#{P:10,100}test printing mapping thing")
-
-  loadBGTiles(rID)
-  loadBGPalettes(rID)
-  loadBGMap(rID)
-
-  REG_BG0CNT = BG_CBB(4) or BG_SBB(10) or BG_4BPP
-  REG_BG1CNT = BG_CBB(14) or BG_SBB(20) or BG_4BPP or BG_REG_64x64
-  REG_DISPCNT = DCNT_MODE0 or DCNT_BG0 or DCNT_BG1 or DCNT_OBJ or DCNT_OBJ_1D
-
-  # REG_BG0VOFS = cast[uint16](bg0Vec.yOffset)
-  # REG_BG0HOFS = cast[uint16](bg0Vec.xOffset)
-  REG_BG1VOFS = cast[uint16](bg1Vec.yOffset)
-  REG_BG1HOFS = cast[uint16](bg1Vec.xOffset)
 
   # initialize the MaxMod playback with default settings and with the soundbank files,
   # then starts playing the .mod file called "spacecat."
@@ -167,36 +177,59 @@ proc main() =
 
     keyPoll()
 
-    if keyIsDown(KEY_LEFT): player.pos.x -= 1
-      # if player.pos.x != 0:
-      #   player.pos.x -= 1
-      # else:
-      #   player.pos.x -= 0
+    if keyIsDown(KEY_LEFT):
+      if backgroundCollision(player, room):
+        if gameInfo.frameCount mod 3 == 0: player.pos.x -= 0
+        else: player.pos.x -= 1
+      else: player.pos.x -= 1
 
-    if keyIsDown(KEY_RIGHT): player.pos.x += 1
+    if keyIsDown(KEY_RIGHT):
+      if backgroundCollision(player, room):
+        if gameInfo.frameCount mod 3 == 0: player.pos.x += 0
+        else: player.pos.x += 1
+      else: player.pos.x += 1
 
-    if keyIsDown(KEY_UP): player.pos.y -= 1
-      # if player.pos.y != 0:
-      #   player.pos.y -= 1
-      # else:
-      #   player.pos.y -= 0
+    # if keyIsDown(KEY_UP):
+    #   if backgroundCollision(player, room):
+    #     if gameInfo.frameCount mod 3 == 0:  player.pos.y -= 0
+    #     else: player.pos.y -= 1
+    #   else: player.pos.y -= 1
 
-    if keyIsDown(KEY_DOWN): player.pos.y += 1
-      # if player.pos.y != 144:
-      #   player.pos.y += 1
-      # else:
-      #   player.pos.y += 0
+    # if keyIsDown(KEY_DOWN): 
+    #   if backgroundCollision(player, room): player.pos.y += 0
+    #   else: player.pos.y += 1
 
-    if keyIsDown(KEY_A): slime.pos.y -= 1
-    if keyIsDown(KEY_B): slime.pos.y += 1
-    if keyIsDown(KEY_L): slime.pos.x -= 1
-    if keyIsDown(KEY_R): slime.pos.x += 1
+    if keyIsDown(KEY_A):
+      invert(player, room)
+
+    # case room.submap:
+    #   of sectionOne:
+    #     section = 1
+    #     printSection(section)
+    #   of sectionTwo:
+    #     section = 2
+    #     printSection(section)
+    #   of sectionThree:
+    #     section = 3
+    #     printSection(section)
+    #   of sectionFour:
+    #     section = 4
+    #     printSection(section)
+    #   of sectionFive:
+    #     section = 5
+    #     printSection(section)
+    #   of sectionSix:
+    #     section = 6
+    #     printSection(section)
+
+    # if keyIsDown(KEY_A): slime.pos.y -= 1
+    # if keyIsDown(KEY_B): slime.pos.y += 1
+    # if keyIsDown(KEY_L): slime.pos.x -= 1
+    # if keyIsDown(KEY_R): slime.pos.x += 1
     if keyIsDown(KEY_ANY):
       if gameInfo.frameCount mod 10 == 0:
         slime.animState = asMove
         slime.spriteIndex += 4
-        # animateSlime(slime)
-        # inc(slime.spriteIndex)
         oamMem[3].setAttr(
           ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
           ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
@@ -207,7 +240,6 @@ proc main() =
 
     if keyIsDown(KEY_SELECT):
       displayText(1)
-      # tteEraseScreen()
 
     if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
       maxmod.stop()
@@ -223,6 +255,7 @@ proc main() =
     oamMem[slime.objID].setPos(slime.pos)
 
     maxmod.frame()
+    # printSection()
 
     if player.hasCollided(slime, gameInfo.frameCount):
       displayText(42)

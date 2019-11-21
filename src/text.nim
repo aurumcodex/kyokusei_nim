@@ -11,7 +11,6 @@
 ]##
 
 import tonc
-# import tonc/private/tte
 
 import ffi_c
 

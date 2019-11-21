@@ -1,10 +1,14 @@
-#include <tonc.h>
-#include "text.h"
+/*
+ *  text.c
+ * 
+ *  A file that gets "wrapped" by Nim so that functions declared here
+ *  can be directly called in the Nim sources, and with minimal overhead.
+ *  (This file is the one that gets compiled and linked.)
+ */
 
-// void write_data(u32 dataID)
-// {
-//     //TODO: add stuff here.
-// }
+#include <tonc.h>
+
+#include "text.h"
 
 /*
  *   print_score()
@@ -19,4 +23,18 @@ void print_score(u32 score)
     tte_erase_screen();
     // tte_set_drawg(chr4c_drawg_b4cts_fast);
     tte_printf("#{P:0,0}Score: %d", score);
+}
+
+void print_section(u32 submap)
+{
+    tte_erase_screen();
+    switch (submap)
+    {
+        case 1:
+            tte_printf("#{P:150,80}Section: One");
+        case 2:
+            tte_printf("#{P:150,80}Section: Two");
+        // default:
+            // tte_printf("#{P:150,80}Section: Other");
+    }
 }

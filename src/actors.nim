@@ -26,13 +26,6 @@ type
     pKeen
 
 type
-  Stats* = object
-    maxHP: int
-    maxAP: int
-    atk: int
-    def: int
-
-type
   AnimState* = enum
     asIdle
     asMove
@@ -43,12 +36,9 @@ type
     objID*: uint
     spriteIndex*: uint16
     HP*: int
-    AP*: int
     pos*: Vec2i
     height*: int
     width*: int
-    # bounds: Box
-    stats: Stats
     gravity*: Gravity
     polarity*: Polarity
 
@@ -59,11 +49,19 @@ type
     spriteIndex*: uint16
     animState*: AnimState
     HP*: int
-    AP*: int
     pos*: Vec2i
     height*: int
     width*: int
-    stats: Stats
+
+type
+  Projectile* = object
+    ## A Projectile data typethat serves as a struct to hold positional data, among other things.
+    objID*: uint8
+    spriteIndex*: uint16
+    velocity*: uint
+    pos*: Vec2i
+    height*: uint
+    width*: uint
     
 proc manhattanDistance*(player: Player, enemy: Enemy): int =
   ## Function to asisst in determining the shortest distance to the player sprite from an enemy.
@@ -84,18 +82,14 @@ proc hasCollided*(player: Player, enemy: Enemy, frames: uint): bool =
   if frames mod 2 == 0:
     result = xCollision(player, enemy) and yCollision(player, enemy)
 
-proc roomOneCollision*(submap: Submap): bool =
-  ## Checks the 
-  return false
-
-proc backgroundCollision*(player: var Player, frameCount: uint) =
-  if frameCount mod 3 == 0:
-    if player.pos.x <= 13:
-      player.pos.x = 12
-    # elif player.pos.x <= 304:
-    #   player.pos.x = 304
-    elif player.pos.y <= 1:
-      player.pos.y = 0
-    elif player.pos.y + player.height >= 144:
-      player.pos.y = 144-player.height
+# proc backgroundCollision*(player: var Player, frameCount: uint) =
+#   if frameCount mod 3 == 0:
+#     if player.pos.x <= 13:
+#       player.pos.x = 12
+#     # elif player.pos.x <= 304:
+#     #   player.pos.x = 304
+#     elif player.pos.y <= 1:
+#       player.pos.y = 0
+#     elif player.pos.y + player.height >= 144:
+#       player.pos.y = 144-player.height
 
