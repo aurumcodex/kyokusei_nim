@@ -16,6 +16,8 @@
  *   A function to assist in printing the score of the game.
  *   Needed due to using Nim in an embedded platform doesn't mean that a `copyStr`
  *   function will be available.
+ * 
+ *  * Used for debugging purposes only.
  */
 void print_player_pos(s32 x, s32 y)
 {
@@ -40,7 +42,8 @@ void print_score(u32 score)
  *   print_section()
  *
  *   A function to assist in printing the section of the map of the game.
- *   Used mainly for debugging purposes.
+ * 
+ *  * Used for debugging purposes only.
  */
 void print_section(s32 submap)
 {

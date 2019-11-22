@@ -17,12 +17,12 @@ import tonc/maxmod
 
 #[Local Imports]#
 import actors
+import collision
 import ffi_c          # will probably be removed
 import geometry
 import input
 import panicoverride
 import rendering      # also imports the sprites, since that's chained in.
-import rendering/collision
 import text
 import utility
 
@@ -38,7 +38,7 @@ asm """
 var rID = riOne
 var bg1Vec = Offsets(xOffset: 0, yOffset: 0)
 var room = Room(roomID: riOne, submap: sectionOne)
-var section = 0
+# var section = 0
 
 var
   posVec = vec2i(0, 152)
@@ -158,11 +158,11 @@ proc main() =
   # )
 
   #[slime stuff]#
-  oamMem[3].setAttr(
-    ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
-    ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
-  )
+  # oamMem[3].setAttr(
+  #   ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+  #   ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
+  #   ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
+  # )
 
   # oamMem[4].setAttr(
   #   ATTR0_Y(slimePos.y.uint16 + 30) or ATTR0_4BPP or ATTR0_SQUARE,
@@ -217,70 +217,24 @@ proc main() =
       else: 
         player.pos.y += 1
 
-    # if keyIsDown(KEY_A):
-    #   invert(player, room)
+    # if keyIsDown(KEY_ANY):
+    #   if gameInfo.frameCount mod 10 == 0:
+    #     slime.animState = asMove
+    #     slime.spriteIndex += 4
+    #     oamMem[3].setAttr(
+    #       ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+    #       ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
+    #       ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
+    #     )
+    #     if slime.spriteIndex == 561:
+    #       slime.spriteIndex = 549
 
-    if gameInfo.frameCount mod 10 == 0:
-      case room.submap:
-        of sectionOne:
-          # tteEraseScreen()
-          tteWrite("#{P:50,50}area one")
-          section = 1
-          posVec.x = section * 8
-          # printSection(section)
-        of sectionTwo:
-          # tteEraseScreen()
-          tteWrite("#{P:50,50}area two")
-          section = 2
-          posVec.x = section * 8
-          # printSection(section)
-        of sectionThree:
-          # tteEraseScreen()
-          tteWrite("#{P:50,50}area three")
-          section = 3
-          posVec.x = section * 8
-          # printSection(section)
-        of sectionFour:
-          # tteEraseScreen()
-          tteWrite("#{P:50,50}area four")
-          section = 4
-          posVec.x = section * 8
-          # printSection(section)
-        of sectionFive:
-          # tteEraseScreen()
-          tteWrite("#{P:50,50}area five")
-          section = 5
-          posVec.x = section * 8
-          # printSection(section)
-        of sectionSix:
-          # tteEraseScreen()
-          tteWrite("#{P:50,50}area six")
-          section = 6
-          posVec.x = section * 8
-          # printSection(section)
+    # if keyIsDown(KEY_SELECT):
+    #   displayText(1)
 
-    # if keyIsDown(KEY_A): slime.pos.y -= 1
-    # if keyIsDown(KEY_B): slime.pos.y += 1
-    # if keyIsDown(KEY_L): slime.pos.x -= 1
-    # if keyIsDown(KEY_R): slime.pos.x += 1
-    if keyIsDown(KEY_ANY):
-      if gameInfo.frameCount mod 10 == 0:
-        slime.animState = asMove
-        slime.spriteIndex += 4
-        oamMem[3].setAttr(
-          ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-          ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
-          ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
-        )
-        if slime.spriteIndex == 561:
-          slime.spriteIndex = 549
-
-    if keyIsDown(KEY_SELECT):
-      displayText(1)
-
-    if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
-      maxmod.stop()
-      maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
+    # if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
+    #   maxmod.stop()
+    #   maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
 
     if keyIsUp(KEY_SELECT) and not keyIsUp(KEY_R) and gameInfo.frameCount > 300'u:
       tteEraseScreen()
@@ -289,17 +243,13 @@ proc main() =
       writeSave(player)
 
     oamMem[player.objID].setPos(player.pos)
-    oamMem[slime.objID].setPos(slime.pos)
-    oamMem[32].setPos(posVec)
+    # oamMem[slime.objID].setPos(slime.pos)
+    oamMem[32].setPos(posVec)  # debug sprite
 
-    maxmod.frame()
-    # printSection()
+    maxmod.frame()  # Increment frame for MaxMod playback to work properly.
 
-    if player.hasCollided(slime, gameInfo.frameCount):
-      displayText(42)
-
-    # if gameInfo.frameCount mod 4 == 0:
-    #   backgroundCollision(player, room)
+    # if player.hasCollided(slime, gameInfo.frameCount):
+    #   displayText(42)
 
     moveScreen(player, bg1Vec, room)
 

@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-10-24
+  Date Modified: 2019-11-22
 
   ## [Rendering File]
   A file used for incorporating the sprite data and background data
@@ -18,22 +18,6 @@ import geometry
 import sprites
 import ffi_c
 
-# include rendering/collision
-
-# type
-#   Viewport* {.bycopy.} = object
-#     x*: cint
-#     xMin*: cint
-#     xMax*: cint
-#     xPage*: cint
-#     y*: cint
-#     yMin*: cint
-#     yMax*: cint
-#     yPage*: cint
-
-# var obj_buffer*: ptr ObjAttr = array[128, ObjAttr]
-# var obj_buffer*: ptr ObjAttr
-
 type
   RoomId* = enum
     ## An enum type for determing which backgrounds to load in the dedicated
@@ -47,15 +31,6 @@ type
   Room* = object
     roomID*: RoomID
     submap*: Submap
-
-# proc setViewportPos(vp: var Viewport, x, y: int) =
-#   ## Procedure to set the viewport's location.
-#   vp.x = clamp(x, vp.xMin, vp.xMax - vp.xPage)
-#   vp.y = clamp(y, vp.yMin, vp.yMax - vp.yPage)
-
-# proc centerViewport(vp: var Viewport, x, y: int) =
-#   ## Procedure to center the viewport.
-#   vp.setViewportPos(x - vp.xPage div 2, y - vp.yPage div 2)
 
 #[Sprite, Palette, and Map Data Loading]#
 
@@ -125,178 +100,11 @@ proc loadBGMap*(rid: RoomID) =
 
 
 #[Screen Movement]#
-
-proc shiftScreenUp*(player: var Player, bgVec: var Offsets, room: var Room) =
-  ## Helper function to shift the screen upwards.
-  var section: uint = 0
-  case room.submap:
-  of sectionOne:
-    bgVec.yOffset -= SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    player.pos.y = SCREEN_HEIGHT - player.height
-    room.submap = sectionFive
-    # section = 1
-    # printSection(section)
-    # discard
-  of sectionTwo:
-    bgVec.yOffset -= SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    player.pos.y = SCREEN_HEIGHT - player.height
-    room.submap = sectionSix
-    # section = 2
-    # printSection(section)
-  of sectionThree:
-    bgVec.yOffset -= SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    player.pos.y = SCREEN_HEIGHT - player.height
-    room.submap = sectionOne
-    # section = 3
-    # printSection(section)
-  of sectionFour:
-    bgVec.yOffset -= SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    player.pos.y = SCREEN_HEIGHT - player.height
-    room.submap = sectionTwo
-    # section = 4
-    # printSection(section)
-  of sectionFive:
-    bgVec.yOffset -= SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    player.pos.y = SCREEN_HEIGHT - player.height
-    room.submap = sectionThree
-    # section = 5
-    # printSection(section)
-  of sectionSix:
-    bgVec.yOffset -= SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    player.pos.y = SCREEN_HEIGHT - player.height
-    room.submap = sectionFour
-    # section = 6
-    # printSection(section)
-
-proc shiftScreenRight*(player: var Player, bgVec: var Offsets, room: var Room) =
-  ## Helper function to shift the screen rightwards.
-  bgVec.xOffset += SCREEN_WIDTH
-  REG_BG1HOFS = cast[uint16](bgVec.xOffset)
-  player.pos.x = 0
-  case room.submap:
-  of sectionOne:
-    room.submap = sectionTwo
-  of sectionThree:
-    room.submap = sectionFour
-  of sectionFive:
-    room.submap = sectionSix
-  else:
-    discard
-
-proc shiftScreenLeft*(player: var Player, bgVec: var Offsets, room: var Room) =
-  ## Helper function to shift the screen leftwards.
-  bgVec.xOffset -= SCREEN_WIDTH
-  REG_BG1HOFS = cast[uint16](bgVec.xOffset)
-  player.pos.x = (SCREEN_WIDTH - player.width) - 1
-  case room.submap:
-  of sectionTwo:
-    room.submap = sectionOne
-  of sectionFour:
-    room.submap = sectionThree
-  of sectionSix:
-    room.submap = sectionFive
-  else:
-    discard
-
-proc shiftScreenDown*(player: var Player, bgVec: var Offsets, room: var Room) =
-  ## Helper function to shift the screen downwards.
-  case room.submap:
-  of sectionOne:
-    bgVec.yOffset += SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
-    player.pos.y = 1
-    room.submap = sectionThree
-  of sectionTwo:
-    bgVec.yOffset += SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
-    player.pos.y = 1
-    room.submap = sectionFour
-  of sectionThree:
-    bgVec.yOffset += SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
-    player.pos.y = 1
-    room.submap = sectionFive
-  of sectionFour:
-    bgVec.yOffset += SCREEN_HEIGHT
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
-    player.pos.y = 1
-    room.submap = sectionSix
-  of sectionFive:
-    # bgVec.yOffset += SCREEN_HEIGHT
-    bgVec.yOffset += SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
-    player.pos.y = 1
-    room.submap = sectionOne
-  of sectionSix:
-    # bgVec.yOffset += SCREEN_HEIGHT
-    bgVec.yOffset += SCREEN_HEIGHT + 32      # plus 32 due to wrap around, and how the screens move.
-    REG_BG1VOFS = cast[uint16](bgVec.yOffset)
-    # player.pos.y = (SCREEN_HEIGHT - player.height) - 1
-    player.pos.y = 1
-    room.submap = sectionTwo
-
-proc moveScreen*(player: var Player, bgVec: var Offsets, room: var Room) =
-  ## Function to move the displayed section(s) of the mapping data of the backgrounds
-  case room.submap:
-  of sectionOne:
-    if player.pos.x+player.width == SCREEN_WIDTH:
-      shiftScreenRight(player, bgVec, room)
-    if player.pos.y == 0:
-      shiftScreenUp(player, bgVec, room)
-    elif player.pos.y + player.height == SCREEN_HEIGHT:
-      shiftScreenDown(player, bgVec, room)
-
-  of sectionTwo:
-    if player.pos.x == 0:
-      shiftScreenLeft(player, bgVec, room)
-    if player.pos.y == 0:
-      shiftScreenUp(player, bgVec, room)
-    elif player.pos.y + player.height == SCREEN_HEIGHT:
-      shiftScreenDown(player, bgVec, room)
-
-  of sectionThree:
-    if player.pos.x + player.width == SCREEN_WIDTH:
-      shiftScreenRight(player, bgVec, room)
-    if player.pos.y == 0:
-      shiftScreenUp(player, bgVec, room)
-    elif player.pos.y + player.height == SCREEN_HEIGHT:
-      shiftScreenDown(player, bgVec, room)
-
-  of sectionFour:
-    if player.pos.x == 0:
-      shiftScreenLeft(player, bgVec, room)
-    if player.pos.y == 0:
-      shiftScreenUp(player, bgVec, room)
-    elif player.pos.y + player.height == SCREEN_HEIGHT:
-      shiftScreenDown(player, bgVec, room)
-
-  of sectionFive:
-    if player.pos.x+player.width == SCREEN_WIDTH:
-      shiftScreenRight(player, bgVec, room)
-    if player.pos.y == 0:
-      shiftScreenUp(player, bgVec, room)
-    elif player.pos.y + player.height == SCREEN_HEIGHT:
-      shiftScreenDown(player, bgVec, room)
-
-  of sectionSix:
-    if player.pos.x == 0:
-      shiftScreenLeft(player, bgVec, room)
-    if player.pos.y == 0:
-      shiftScreenUp(player, bgVec, room)
-    elif player.pos.y + player.height == SCREEN_HEIGHT:
-      shiftScreenDown(player, bgVec, room)
-
+# Check out the Nim file in `rendering/screens.nim` for the functions listed there.
+include rendering/screens
 
 # proc animateSlime*(slime: Enemy, frame: uint16) =
 #   discard
+
+# # This `include` is at the bottom, due to the way Nim handles declarations.
+# include rendering/collision

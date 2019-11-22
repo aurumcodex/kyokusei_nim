@@ -8,11 +8,11 @@ Estimated Feature Completeness: *1%*
 == Features Remaining = [13]
 - [ ] Sprite Animation (3 sprites will be actually "animated" (maybe))
 - [ ] Collision Detection (should be next priority; in progress)
-- [ ] Gravity Shifting Bot Gameplay Mechanics (this and the next item will be developed concurrently)
+- [ ] Gravity Shifting Bot Gameplay Mechanics (this will probably be refactored)
 - [ ] Forme Shifting Player Gamplay Mechanics
-- [ ] Background Changing (this might be a tricky thing to do)
+- [x] Background Changing (this might be a tricky thing to do)
 ** [x] Shift Background Display
-** [ ] Change collision maps on background change
+** [ ] Change collision maps on background change (may not be implemented in time)
 - [ ] Projectile Firing and Associated Mechanics (seems easy enough?)
 ** [ ] Collision
 *** [x] Genericize functions
@@ -27,13 +27,6 @@ Estimated Feature Completeness: *1%*
 === Sprite Related
 // NOT a rendering related thing; TODOs for loading sprites and making sprites
 - [ ] add "animation frames" to the Echo sprite):
-      displayText(1)
-
-    if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
-      maxmod.stop()
-      maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
-
-    if keyIsUp(KEY_SELECT) and not keyIsUp(KE
 - [ ] add "animation frames" to the Bot sprite (Era)
 - [ ] work on level design, time allowing(?) (needs to happen for "illusion" to work properly)
 - [x] figure out how sprite animation's even gonna work to begin with (easier than i thought)
@@ -80,8 +73,8 @@ Estimated Feature Completeness: *1%*
 - [ ] create ability to detect collision (G means it was genericized)
 ** [x] deal with object collision (G)
 ** [x] deal with enemy collision (G)
-** [ ] deal with background collision
-- [ ] be able to stop when colliding with something (started)
+** [x] deal with background collision (G)
+- [x] be able to stop when colliding with something
 - [ ] take damage with collision if enemy or area hazard
 ** [ ] insta-death if contact is with spikes
 
