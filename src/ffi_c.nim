@@ -16,4 +16,8 @@
 proc printScore*(score: uint) {.importc: "print_score", header: "../src/c_files/text.h".}
   ## Sends the `score` variable to the C implementation in order to print the score.
 
-proc printSection*(submap: uint) {.importc: "print_section", header: "../src/c_files/text.h".}
+proc printPlayerPos*(x: int, y: int) {.importc: "print_player_pos", header: "../src/c_files/text.h".}
+  ## Sends the x and y variables to the C function in order to 
+
+proc printSection*(submap: int) {.importc: "print_section", header: "../src/c_files/text.h".}
+  ## Sends the int representation of the enum type Submap to be printed.

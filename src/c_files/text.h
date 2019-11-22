@@ -8,7 +8,10 @@
 #include <tonc.h>
 
 // ==== prototypes ===============================================
-// documentation for this function can be found in `text.c`
+// documentation for these functions can be found in `text.c`
+
+void print_player_pos(s32 x, s32 y);
+
 void print_score(u32 score);
 
-void print_section(u32 submap);
+void print_section(s32 submap);

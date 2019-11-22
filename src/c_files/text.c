@@ -17,24 +17,56 @@
  *   Needed due to using Nim in an embedded platform doesn't mean that a `copyStr`
  *   function will be available.
  */
+void print_player_pos(s32 x, s32 y)
+{
+    tte_erase_screen();
+    tte_printf("#{P:120,0}x: %d; y: %d", x, y);
+}
+
+/*
+ *   print_score()
+ *
+ *   A function to assist in printing the score of the game.
+ *   Needed due to using Nim in an embedded platform doesn't mean that a `copyStr`
+ *   function will be available.
+ */
 void print_score(u32 score)
 {
-    // tte_set_margins(0, 0, SCREEN_WIDTH, 20);
     tte_erase_screen();
-    // tte_set_drawg(chr4c_drawg_b4cts_fast);
     tte_printf("#{P:0,0}Score: %d", score);
 }
 
-void print_section(u32 submap)
+/*
+ *   print_section()
+ *
+ *   A function to assist in printing the section of the map of the game.
+ *   Used mainly for debugging purposes.
+ */
+void print_section(s32 submap)
 {
     tte_erase_screen();
     switch (submap)
     {
         case 1:
             tte_printf("#{P:150,80}Section: One");
+            break;
         case 2:
             tte_printf("#{P:150,80}Section: Two");
-        // default:
-            // tte_printf("#{P:150,80}Section: Other");
+            break;
+        case 3:
+            tte_printf("#{P:150,80}Section: Three");
+            break;
+        case 4:
+            tte_printf("#{P:150,80}Section: Four");
+            break;
+        case 5:
+            tte_printf("#{P:150,80}Section: Five");
+            break;
+        case 6:
+            tte_printf("#{P:150,80}Section: Six");
+            break;
+        default:
+            tte_printf("#{P:150,80}Section: Unknown");
+            break;
     }
 }

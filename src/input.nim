@@ -30,20 +30,23 @@ proc jump*(player: var Player) =
 
   discard
 
-proc invert*(player: var Player, room: Room) =
-  # if keyIsDown(KEY_A):
-    if player.gravity == gNormal:
-      player.gravity = gInvert
-    if player.gravity == gInvert:
-      oamMem[player.objID].setAttr(
-        ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-        ATTR1_X(player.pos.x.uint16) or ATTR1_VFLIP or ATTR1_SIZE_16,
-        ATTR2_ID(player.spriteIndex) or ATTR2_PALBANK(0)
-      )
-      while not backgroundCollision(player, room):
-        player.pos.y += 1
-        oamMem[player.objID].setPos(player.pos)
+# proc invert*(player: var Player, room: Room) =
+#   # if keyIsDown(KEY_A):
+#     if player.gravity == gNormal:
+#       player.gravity = gInvert
+#     if player.gravity == gInvert:
+#       oamMem[player.objID].setAttr(
+#         ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+#         ATTR1_X(player.pos.x.uint16) or ATTR1_VFLIP or ATTR1_SIZE_16,
+#         ATTR2_ID(player.spriteIndex) or ATTR2_PALBANK(0)
+#       )
+#       while not backgroundCollision(player, room):
+#         player.pos.y += 1
+#         oamMem[player.objID].setPos(player.pos)
 
 
 proc verticalMove*(player: Player) =
   discard
+
+proc move*(player: Player) =
+  ## Function to move around on the screen.

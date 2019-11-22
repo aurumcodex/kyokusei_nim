@@ -7,13 +7,15 @@ Estimated Feature Completeness: *1%*
 
 == Features Remaining = [13]
 - [ ] Sprite Animation (3 sprites will be actually "animated" (maybe))
-- [ ] Collision Detection (should be next priority)
+- [ ] Collision Detection (should be next priority; in progress)
 - [ ] Gravity Shifting Bot Gameplay Mechanics (this and the next item will be developed concurrently)
 - [ ] Forme Shifting Player Gamplay Mechanics
 - [ ] Background Changing (this might be a tricky thing to do)
 ** [x] Shift Background Display
+** [ ] Change collision maps on background change
 - [ ] Projectile Firing and Associated Mechanics (seems easy enough?)
 ** [ ] Collision
+*** [x] Genericize functions
 ** [ ] Damage Calculation
 - [ ] Player Movement 
 - [ ] Enemy Movement
@@ -24,7 +26,14 @@ Estimated Feature Completeness: *1%*
 
 === Sprite Related
 // NOT a rendering related thing; TODOs for loading sprites and making sprites
-- [ ] add "animation frames" to the Echo sprite
+- [ ] add "animation frames" to the Echo sprite):
+      displayText(1)
+
+    if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
+      maxmod.stop()
+      maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
+
+    if keyIsUp(KEY_SELECT) and not keyIsUp(KE
 - [ ] add "animation frames" to the Bot sprite (Era)
 - [ ] work on level design, time allowing(?) (needs to happen for "illusion" to work properly)
 - [x] figure out how sprite animation's even gonna work to begin with (easier than i thought)
@@ -62,15 +71,15 @@ Estimated Feature Completeness: *1%*
 
 === Input Related
 // TODOs for input stuff
-- [ ] get user input for sprites (mostly for testing, at current point)
+- [x] get user input for sprites (mostly for testing, at current point)
 - [ ] get user input for changing "polarities"
-- [ ] get user input for menus
+- [ ] get user input for menus (optional)
 
 === Geometry Related
 // TODOs for geometry checks and the like
-- [ ] create ability to detect collision (started)
-** [ ] deal with object collision
-** [ ] deal with enemy collision
+- [ ] create ability to detect collision (G means it was genericized)
+** [x] deal with object collision (G)
+** [x] deal with enemy collision (G)
 ** [ ] deal with background collision
 - [ ] be able to stop when colliding with something (started)
 - [ ] take damage with collision if enemy or area hazard

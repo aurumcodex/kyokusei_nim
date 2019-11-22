@@ -38,11 +38,10 @@ asm """
 var rID = riOne
 var bg1Vec = Offsets(xOffset: 0, yOffset: 0)
 var room = Room(roomID: riOne, submap: sectionOne)
-var section: uint = 0
+var section = 0
 
 var
-  posVec = vec2i(82, 78)
-  slimePos = vec2i(120, 80)
+  posVec = vec2i(0, 152)
   slimeIndex = 37
   
 # importSoundbank()
@@ -52,21 +51,28 @@ var modFlatOutLies* {.importc:"MOD_FLAT_OUT_LIES", header:"soundbank.h".}: uint
   
 var player = Player(objID: 0,
                     spriteIndex: 513'u16,
+                    animState: asIdle,
                     HP: 10,
-                    pos: vec2i(15, 128),
+                    ammoCount: 8,
+                    damage: 10,
+                    pos: vec2i(100, 10),
                     height: 16, # 32 when playing as Echo, 16 as Era
                     width: 16,
-                    gravity: gNormal,
+                    # gravity: gNormal,
                     polarity: pImpulse)
   
 var slime = Enemy(objID: 3,
                   spriteIndex: 549'u16,
                   animState: asIdle,
                   HP: 10,
-                  pos: vec2i(50, 128),
+                  damage: 2,
+                  pos: vec2i(50, 12),
                   height: 16,
                   width: 16)
   
+# This is *not* an import; it just includes all of the data from a file and places it here.
+include rendering/projectile_data
+
 var gameInfo = Game(frameCount: 0,
                     player: player,
                     bgOffsets: bg1Vec,
@@ -131,7 +137,7 @@ proc initializeOAM*() =
 proc main() =
   ## Main game logic; a sort of "glue" that binds all of the features together.
 
-  initialize() # Initialize 
+  initialize() # Initialize all data points.
 
   oamMem[player.objID].setAttr(
     ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
@@ -140,16 +146,16 @@ proc main() =
   )
 
   oamMem[1].setAttr(
-    ATTR0_Y(posVec.y.uint16 - 20) or ATTR0_4BPP or ATTR0_TALL,
-    ATTR1_X(posVec.x.uint16 - 40) or ATTR1_SIZE_16x32,
+    ATTR0_Y(120) or ATTR0_4BPP or ATTR0_TALL,
+    ATTR1_X(140) or ATTR1_SIZE_16x32,
     ATTR2_ID(518) or ATTR2_PALBANK(1)
   )
 
-  oamMem[2].setAttr(
-    ATTR0_Y(posVec.y.uint16 + 10) or ATTR0_4BPP or ATTR0_TALL,
-    ATTR1_X(posVec.x.uint16 + 50) or ATTR1_SIZE_16x32,
-    ATTR2_ID(76) or ATTR2_PALBANK(6)
-  )
+  # oamMem[2].setAttr(
+  #   ATTR0_Y(posVec.y.uint16 + 10) or ATTR0_4BPP or ATTR0_TALL,
+  #   ATTR1_X(posVec.x.uint16 + 50) or ATTR1_SIZE_16x32,
+  #   ATTR2_ID(76) or ATTR2_PALBANK(6)
+  # )
 
   #[slime stuff]#
   oamMem[3].setAttr(
@@ -158,10 +164,16 @@ proc main() =
     ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
   )
 
-  oamMem[4].setAttr(
-    ATTR0_Y(slimePos.y.uint16 + 30) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(slimePos.x.uint16 - 20) or ATTR1_SIZE_32x32,
-    ATTR2_ID(613) or ATTR2_PALBANK(3)
+  # oamMem[4].setAttr(
+  #   ATTR0_Y(slimePos.y.uint16 + 30) or ATTR0_4BPP or ATTR0_SQUARE,
+  #   ATTR1_X(slimePos.x.uint16 - 20) or ATTR1_SIZE_32x32,
+  #   ATTR2_ID(613) or ATTR2_PALBANK(3)
+  # )
+
+  oamMem[32].setAttr(
+    ATTR0_Y(posVec.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+    ATTR1_X(posVec.x.uint16) or ATTR1_SIZE_8x8,
+    ATTR2_ID(255) or ATTR2_PALBANK(10)
   )
 
 
@@ -172,55 +184,80 @@ proc main() =
 
   while true:
     # loadBGMap(riOne)
-    if gameInfo.frameCount mod 30 == 0:
+    if gameInfo.frameCount mod 10 == 0:
       printScore(gameInfo.frameCount)
+      printPlayerPos(player.pos.x, player.pos.y)
 
     keyPoll()
 
     if keyIsDown(KEY_LEFT):
-      if backgroundCollision(player, room):
-        if gameInfo.frameCount mod 3 == 0: player.pos.x -= 0
-        else: player.pos.x -= 1
-      else: player.pos.x -= 1
+      if backgroundCollision(player, room): player.pos.x -= 0
+        # if not gameInfo.frameCount mod 3 == 0: player.pos.x -= 0
+        # else: player.pos.x -= 1
+      else: 
+        player.pos.x -= 1
 
     if keyIsDown(KEY_RIGHT):
+      if backgroundCollision(player, room): player.pos.x += 0
+        # if gameInfo.frameCount mod 3 == 0: player.pos.x += 0
+        # else: player.pos.x += 1
+      else: 
+        player.pos.x += 1
+
+    if keyIsDown(KEY_UP):
+      if backgroundCollision(player, room): player.pos.y -= 0
+        # if gameInfo.frameCount mod 3 == 0: player.pos.y -= 0
+        # else: player.pos.y -= 1
+      else:
+        player.pos.y -= 1
+
+    if keyIsDown(KEY_DOWN): 
       if backgroundCollision(player, room):
-        if gameInfo.frameCount mod 3 == 0: player.pos.x += 0
-        else: player.pos.x += 1
-      else: player.pos.x += 1
+        player.pos.y += 0
+      else: 
+        player.pos.y += 1
 
-    # if keyIsDown(KEY_UP):
-    #   if backgroundCollision(player, room):
-    #     if gameInfo.frameCount mod 3 == 0:  player.pos.y -= 0
-    #     else: player.pos.y -= 1
-    #   else: player.pos.y -= 1
+    # if keyIsDown(KEY_A):
+    #   invert(player, room)
 
-    # if keyIsDown(KEY_DOWN): 
-    #   if backgroundCollision(player, room): player.pos.y += 0
-    #   else: player.pos.y += 1
-
-    if keyIsDown(KEY_A):
-      invert(player, room)
-
-    # case room.submap:
-    #   of sectionOne:
-    #     section = 1
-    #     printSection(section)
-    #   of sectionTwo:
-    #     section = 2
-    #     printSection(section)
-    #   of sectionThree:
-    #     section = 3
-    #     printSection(section)
-    #   of sectionFour:
-    #     section = 4
-    #     printSection(section)
-    #   of sectionFive:
-    #     section = 5
-    #     printSection(section)
-    #   of sectionSix:
-    #     section = 6
-    #     printSection(section)
+    if gameInfo.frameCount mod 10 == 0:
+      case room.submap:
+        of sectionOne:
+          # tteEraseScreen()
+          tteWrite("#{P:50,50}area one")
+          section = 1
+          posVec.x = section * 8
+          # printSection(section)
+        of sectionTwo:
+          # tteEraseScreen()
+          tteWrite("#{P:50,50}area two")
+          section = 2
+          posVec.x = section * 8
+          # printSection(section)
+        of sectionThree:
+          # tteEraseScreen()
+          tteWrite("#{P:50,50}area three")
+          section = 3
+          posVec.x = section * 8
+          # printSection(section)
+        of sectionFour:
+          # tteEraseScreen()
+          tteWrite("#{P:50,50}area four")
+          section = 4
+          posVec.x = section * 8
+          # printSection(section)
+        of sectionFive:
+          # tteEraseScreen()
+          tteWrite("#{P:50,50}area five")
+          section = 5
+          posVec.x = section * 8
+          # printSection(section)
+        of sectionSix:
+          # tteEraseScreen()
+          tteWrite("#{P:50,50}area six")
+          section = 6
+          posVec.x = section * 8
+          # printSection(section)
 
     # if keyIsDown(KEY_A): slime.pos.y -= 1
     # if keyIsDown(KEY_B): slime.pos.y += 1
@@ -253,6 +290,7 @@ proc main() =
 
     oamMem[player.objID].setPos(player.pos)
     oamMem[slime.objID].setPos(slime.pos)
+    oamMem[32].setPos(posVec)
 
     maxmod.frame()
     # printSection()
@@ -260,7 +298,8 @@ proc main() =
     if player.hasCollided(slime, gameInfo.frameCount):
       displayText(42)
 
-    # backgroundCollision(player, gameInfo.frameCount)
+    # if gameInfo.frameCount mod 4 == 0:
+    #   backgroundCollision(player, room)
 
     moveScreen(player, bg1Vec, room)
 

@@ -32,7 +32,7 @@ import ffi_c
 #     yPage*: cint
 
 # var obj_buffer*: ptr ObjAttr = array[128, ObjAttr]
-var obj_buffer*: ptr ObjAttr
+# var obj_buffer*: ptr ObjAttr
 
 type
   RoomId* = enum
@@ -71,7 +71,6 @@ proc loadObjSprites*() =
   memcpy32(addr tileMemObj[1][118], ObjBladeSlashTiles, ObjBladeSlashTiles.len div 4)
   memcpy32(addr tileMemObj[1][125], ObjBulletTiles, ObjBulletTiles.len div 4)
   memcpy32(addr tileMemObj[1][127], ObjHealthTiles, ObjHealthTiles.len div 4)
-
 
 proc loadObjPalettes*() =
   ## Function to load palette data into respective palette banks.
@@ -123,6 +122,7 @@ proc loadBGMap*(rid: RoomID) =
       memcpy32(addr seMem[20][0], Room3Map, Room3Map.len)
     of riFour:
       memcpy32(addr seMem[20][0], Room4Map, Room4Map.len)
+
 
 #[Screen Movement]#
 
