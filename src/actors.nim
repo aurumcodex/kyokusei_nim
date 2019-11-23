@@ -42,7 +42,7 @@ type
     pos*: Vec2i
     height*: int
     width*: int
-    # gravity*: Gravity
+    gravity*: Gravity
     polarity*: Polarity
 
 

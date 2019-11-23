@@ -61,7 +61,7 @@ var player = Player(objID: 0,
                     pos: vec2i(100, 10),
                     height: 16, # 32 when playing as Echo, 16 as Era
                     width: 16,
-                    # gravity: gNormal,
+                    gravity: gNormal,
                     polarity: pImpulse)
   
 var slime = Enemy(objID: 3,
@@ -135,6 +135,31 @@ proc initialize*() =
 proc initializeOAM*() =
   var count = 0
   discard
+
+# var position: vec2i = Vec2i(100, 50)
+
+# #[Simple Sprite Renderer]#
+# proc simpleSpriteRender*() =
+#   var tileId: uint32 = 1
+#   var palId: uint32 = 0
+
+#   oamMem[0].setAttr(
+#     ATTR0_Y(position.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+#     ATTR1_X(position.x.uint16) or ATTR1_SIZE_16x16,
+#     ATTR2_ID(tileID) or ATTR2_PALBANK(palId)
+#   )
+
+#   while true:
+#     if keyIsDown(KEY_LEFT):
+#       position.pos.x -= 1
+#     if keyIsDown(KEY_RIGHT):
+#       position.pos.x += 1
+#     if keyIsDown(KEY_UP):
+#       position.pos.y -= 1
+#     if keyIsDown(KEY_DOWN):
+#       position.pos.y += 1
+
+#     oamMem[0].setPos(position)
 
 #[Main Game Loop]#
 proc main() =
