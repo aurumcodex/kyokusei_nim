@@ -22,21 +22,23 @@ type
     d*: uint
     counter*: uint
 
-proc xorwowRNG*(state: ptr XorWowState): uint =
+proc xorwowRNG*(state: var XorWowState): uint =
   ## Takes a state and generates a number from the given state.
+  ## Slightly modified from the link below.
   ## More Info can be found at: https://en.wikipedia.org/wiki/Xorshift#xorwow
-  const s: uint = state.a
+  # static:
+  var s: uint = state.a
 
   var temp = state.d
   state.d = state.c
   state.c = state.b
   state.b = s
 
-  temp = temp xor temp shl 2
-  temp = temp xor temp shr 1
+  temp = temp xor temp shl 4
+  temp = temp xor temp shr 2
   temp = temp xor (s xor (s shl 4))
 
   state.a = temp
 
-  state.counter += 362467
+  state.counter += 1000
   result = temp + state.counter

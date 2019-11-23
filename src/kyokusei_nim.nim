@@ -29,6 +29,8 @@ import rendering      # also imports the sprites, since that's chained in.
 import text
 import utility
 
+import logic/random
+
 #[Inline Assembly]#
 # Some inline assembly, mainly for emulators or flashcarts, since those search
 # through the ROM data for a "magic string" that determines what save type it uses.
@@ -82,6 +84,8 @@ var gameInfo = Game(frameCount: 0,
                     state: gsTitle,
                     hiScore: 100,
                     score: 0)
+
+var rngState: XorWowState
 
 proc initialize*() =
   ## Helper function to lessen some of the boilerplate that would otherwise appear in main().
@@ -211,9 +215,18 @@ proc main() =
 
   while true:
     # loadBGMap(riOne)
+    rngState = XorWowState(
+      a: gameInfo.frameCount,
+      b: gameInfo.frameCount mod 42,
+      c: gameInfo.frameCount shr 2,
+      d: gameInfo.frameCount - 300,
+      counter: 0
+    )
+
     if gameInfo.frameCount mod 10 == 0:
-      printScore(gameInfo.frameCount)
-      printPlayerPos(player.pos.x, player.pos.y)
+      # printScore(gameInfo.frameCount)
+      printScore(xorwowRNG(rngState))
+      # printPlayerPos(player.pos.x, player.pos.y)
 
     keyPoll()
 
