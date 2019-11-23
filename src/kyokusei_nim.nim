@@ -11,6 +11,9 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
+#[System Imports]#
+# import random
+
 #[Nimble Imports]#
 import tonc
 import tonc/maxmod
@@ -176,7 +179,6 @@ proc main() =
     ATTR2_ID(255) or ATTR2_PALBANK(10)
   )
 
-
   # initialize the MaxMod playback with default settings and with the soundbank files,
   # then starts playing the .mod file called "spacecat."
   maxmod.init(soundbankBin, 8)
@@ -190,32 +192,10 @@ proc main() =
 
     keyPoll()
 
-    if keyIsDown(KEY_LEFT):
-      if backgroundCollision(player, room): player.pos.x -= 0
-        # if not gameInfo.frameCount mod 3 == 0: player.pos.x -= 0
-        # else: player.pos.x -= 1
-      else: 
-        player.pos.x -= 1
+    # rand(frameCount)
+    # randomize(gameInfo.frameCount.int64)
 
-    if keyIsDown(KEY_RIGHT):
-      if backgroundCollision(player, room): player.pos.x += 0
-        # if gameInfo.frameCount mod 3 == 0: player.pos.x += 0
-        # else: player.pos.x += 1
-      else: 
-        player.pos.x += 1
-
-    if keyIsDown(KEY_UP):
-      if backgroundCollision(player, room): player.pos.y -= 0
-        # if gameInfo.frameCount mod 3 == 0: player.pos.y -= 0
-        # else: player.pos.y -= 1
-      else:
-        player.pos.y -= 1
-
-    if keyIsDown(KEY_DOWN): 
-      if backgroundCollision(player, room):
-        player.pos.y += 0
-      else: 
-        player.pos.y += 1
+    player.move(room)
 
     # if keyIsDown(KEY_ANY):
     #   if gameInfo.frameCount mod 10 == 0:

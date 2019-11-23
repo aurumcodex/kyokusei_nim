@@ -14,21 +14,9 @@
 import tonc
 
 import actors
+import collision
 import rendering
-import rendering/collision
 
-proc jump*(player: var Player) =
-  ## A function to allow the player (as Echo) to jump around.
-  const height = 20
-  var base = player.pos.y
-  if keyIsDown(KEY_A):
-    while player.pos.y < base + height:
-      player.pos.y += 1
-      oamMem[player.objID].setPos(player.pos)
-      if player.pos.y == base + height:
-        player.pos.y -= 1
-
-  discard
 
 # proc invert*(player: var Player, room: Room) =
 #   # if keyIsDown(KEY_A):
@@ -45,8 +33,28 @@ proc jump*(player: var Player) =
 #         oamMem[player.objID].setPos(player.pos)
 
 
-proc verticalMove*(player: Player) =
-  discard
-
-proc move*(player: Player) =
+proc move*(player: var Player, room: Room) =
   ## Function to move around on the screen.
+  if keyIsDown(KEY_LEFT):
+    if player.backgroundCollision(room):
+      player.pos.x -= 0
+    else:
+      player.pos.x -= 1
+    
+  if keyIsDown(KEY_RIGHT):
+    if backgroundCollision(player, room):
+      player.pos.x += 0
+    else:
+      player.pos.x += 1
+
+  if keyIsDown(KEY_UP):
+    if backgroundCollision(player, room):
+      player.pos.y -= 0
+    else:
+      player.pos.y -= 1
+
+  if keyIsDown(KEY_DOWN): 
+    if backgroundCollision(player, room):
+      player.pos.y += 0
+    else:
+      player.pos.y += 1

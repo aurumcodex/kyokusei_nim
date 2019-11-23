@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-21
+  Date Modified: 2019-11-22
 
   ## [Actors File]
   A file used for various characters and things that the player can interact
@@ -71,7 +71,7 @@ type
     isBullet*: bool
     visible*: bool
     
-proc manhattanDistance*(player: Player, enemy: Enemy): int =
+proc manhattanDistance*[T, U](player: T, enemy: U): int =
   ## Function to asisst in determining the shortest distance to the player sprite from an enemy.
   result = abs(player.pos.x - enemy.pos.x) + abs(player.pos.y - player.pos.y)
     

@@ -50,18 +50,29 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
       if (obj.pos.x + obj.width) == SCREEN_WIDTH - 16:
         obj.pos.x = ((SCREEN_WIDTH - 16) - obj.width) - 1
         return true
-      if (obj.pos.y + obj.height) == 18 and (obj.pos.x >= 152 and obj.pos.x <= SCREEN_WIDTH - 16):
-        obj.pos.y = 17 - obj.height
-        return true
-      if obj.pos.y == 23 and (obj.pos.x >= 152 and obj.pos.x <= SCREEN_WIDTH - 16):
-        obj.pos.y = 23 - obj.height
-        return true
+      if (obj.pos.x + obj.width >= 152 and obj.pos.x <= SCREEN_WIDTH - 16):
+        if obj.pos.y + obj.height == 40:
+          obj.pos.y = (40 - obj.height) - 1
+        if obj.pos.y == 48:
+          obj.pos.y = 49
+          return true
+      if (obj.pos.y + obj.height) >= 40 and (obj.pos.y <= 48):
+        if obj.pos.x + obj.width == 152:
+          obj.pos.x = (152 - obj.width) - 1
+          return true
       if (obj.pos.x + obj.width) == 152 and (obj.pos.y >= 17 and obj.pos.y <= 23):
-        obj.pos.x = 152 - obj.width
+        obj.pos.x = (152 - obj.width) - 1
         return true
-      if (obj.pos.y + obj.height) == 64 and (obj.pos.x >= 152 and obj.pos.x <= 192):
-        obj.pos.y = 64 - obj.height
-        return true
+      if (obj.pos.x >= 127 and obj.pos.x <= 192):
+        if obj.pos.y + obj.height == 80:
+          obj.pos.y = (80 - obj.height) - 1
+        if obj.pos.y == 87:
+          obj.pos.y = 88
+          return true
+      if obj.pos.y + obj.height >= 80 and (obj.pos.y <= 87):
+        if obj.pos.x == 192:
+          obj.pos.x = 193
+          return true
 
   #[Section Three Collision]#
   of Submap.sectionThree:
@@ -127,6 +138,19 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
       if obj.pos.y + obj.height == SCREEN_HEIGHT - 8:
         obj.pos.y = ((SCREEN_HEIGHT - 8) - obj.height) - 1
         return true
+    
+    if obj.pos.x + obj.width >= 160 and obj.pos.x + obj.width <= SCREEN_WIDTH - 16:
+      if obj.pos.y + obj.height == 48:
+        obj.pos.y = (48 - obj.height) - 1
+        return true
+      if obj.pos.y == 56:
+        obj.pos.y = 57
+        return true
+
+    if obj.pos.y + obj.height >= 48 and obj.pos.y <= 56:
+      if obj.pos.x + obj.width == 160:
+        obj.pos.x = (160 - obj.width) - 1
+        return true
 
   #[Section Five Collision]#
   of Submap.sectionFive:
@@ -168,10 +192,19 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
         obj.pos.x = (SCREEN_WIDTH - 16) - obj.width
         return true
       if obj.pos.x >= 32 and obj.pos.x + obj.width <= 200:
-        discard
-      if obj.pos.y == 128:
-        obj.pos.y = 129
-        return true
+        if obj.pos.y == 120:
+          obj.pos.y = 121
+          return true
+        if obj.pos.x == 32:
+          obj.pos.x = 33
+          return true
+        if obj.pos.x + obj.width == (SCREEN_WIDTH - 40):
+          obj.pos.x = ((SCREEN_WIDTH - 40) - obj.width) - 1
+          return true
+      if (obj.pos.x >= 0 and obj.pos.x <= 32) or (obj.pos.x >= (SCREEN_WIDTH - 40)):
+        if obj.pos.y == 128:
+          obj.pos.y = 129
+          return true
       if obj.pos.x >= 64 and obj.pos.x <= 128:
         if obj.pos.y + obj.height == SCREEN_HEIGHT - 8:
           obj.pos.y = ((SCREEN_HEIGHT - 8) - obj.height) - 1
