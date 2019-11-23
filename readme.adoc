@@ -21,6 +21,7 @@ v0.0.0, 2019.09.21
         </tr>
         <tr>
             <!-- <td><img src="https://forthebadge.com/images/badges/made-with-c.svg" alt="Made with C"/></td> -->
+            <td><img src="https://img.shields.io/endpoint?url=https://gitlab.com/kyokusei/kyokusei_nim/raw/master/misc/badge-lang.json"/></td>
             <td><img src="https://img.shields.io/gitlab/pipeline/kyokusei/kyokusei_nim.svg?color=98c832&label=pipeline&logo=gitlab&style=flat-square" alt="Pipeline Status"/></td>
             <td><img src="https://img.shields.io/badge/license-MIT-137.svg?style=flat-square" alt="License Used"/></td>
             <td><img src="https://img.shields.io/badge/Nintendo-GBA-5517A3.svg?style=flat-square&logo=nintendo" alt="For the GBA Handheld Console"/></td>
