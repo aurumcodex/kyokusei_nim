@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-21
+  Date Modified: 2019-11-24
 
   ## [Projectile Data File]
   A file used *only* for holding the data for the projectiles.
@@ -18,10 +18,10 @@ const bulletSprite: uint16 = 638
 const bladeSlashSprite: uint16 = 631
 
 var bullet1 = Projectile(
-  objID: 9,
+  objID: 1,
   spriteIndex: bulletSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 8,
   width: 8,
   isBullet: true,
@@ -30,10 +30,10 @@ var bullet1 = Projectile(
 )
 
 var bullet2 = Projectile(
-  objID: 10,
+  objID: 2,
   spriteIndex: bulletSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 8,
   width: 8,
   isBullet: true,
@@ -42,10 +42,10 @@ var bullet2 = Projectile(
 )
 
 var bullet3 = Projectile(
-  objID: 11,
+  objID: 3,
   spriteIndex: bulletSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 8,
   width: 8,
   isBullet: true,
@@ -54,10 +54,10 @@ var bullet3 = Projectile(
 )
 
 var bullet4 = Projectile(
-  objID: 12,
+  objID: 4,
   spriteIndex: bulletSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 8,
   width: 8,
   isBullet: true,
@@ -66,10 +66,10 @@ var bullet4 = Projectile(
 )
 
 var bullet5 = Projectile(
-  objID: 13,
+  objID: 5,
   spriteIndex: bulletSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 8,
   width: 8,
   isBullet: true,
@@ -78,10 +78,10 @@ var bullet5 = Projectile(
 )
 
 var bladeSlash1 = Projectile(
-  objID: 14,
+  objID: 6,
   spriteIndex: bladeSlashSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 16,
   width: 16,
   isBullet: false,
@@ -90,10 +90,10 @@ var bladeSlash1 = Projectile(
 )
 
 var bladeSlash2 = Projectile(
-  objID: 14,
+  objID: 7,
   spriteIndex: bladeSlashSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 16,
   width: 16,
   isBullet: false,
@@ -102,10 +102,10 @@ var bladeSlash2 = Projectile(
 )
 
 var bladeSlash3 = Projectile(
-  objID: 14,
+  objID: 8,
   spriteIndex: bladeSlashSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 16,
   width: 16,
   isBullet: false,
@@ -114,10 +114,10 @@ var bladeSlash3 = Projectile(
 )
 
 var bladeSlash4 = Projectile(
-  objID: 14,
+  objID: 9,
   spriteIndex: bladeSlashSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 16,
   width: 16,
   isBullet: false,
@@ -126,10 +126,10 @@ var bladeSlash4 = Projectile(
 )
 
 var bladeSlash5 = Projectile(
-  objID: 14,
+  objID: 10,
   spriteIndex: bladeSlashSprite,
   velocity: 4,
-  pos: vec2i(player.pos.x+player.width, player.pos.y+(player.height div 2)),
+  pos: vec2i(0, 0),
   height: 16,
   width: 16,
   isBullet: false,

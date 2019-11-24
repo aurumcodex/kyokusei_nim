@@ -5,3 +5,4 @@ src/gfx/*.bin
 *.elf
 *.gba
 *.md
+*.txt

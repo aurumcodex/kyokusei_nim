@@ -55,7 +55,7 @@ proc initializeSave*(p: var Player)=
   # SRAM memory location at hex location 0x10 (16) {used for player X position}.
   sramMem[0x10] = 16
   # SRAM memory location at hex location 0x11 (17) {used for player Y position}.
-  sramMem[0x11] = 127
+  sramMem[0x11] = 100
 
 proc loadSave*(p: var Player) {.codegenDecl:EWRAM_CODE.} =
   ## Function to load in the data from a save file.

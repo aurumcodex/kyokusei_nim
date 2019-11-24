@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-18
+  Date Modified: 2019-11-24
 
   ## [Sprites File]
   A file used for keeping the sprite data and palette data
@@ -48,6 +48,7 @@ const
 const
   BotPalette*: cstring = staticRead("gfx/bot.pal.bin")
   EchoPalette*: cstring = staticRead("gfx/echo.pal.bin")
+  InvertEchoPalette*: cstring = staticRead("gfx/pal_invert_echo.pal.bin")
   PumpkinPalette*: cstring = staticRead("gfx/pumpkin.pal.bin")
   UIHeartPalette*: cstring = staticRead("gfx/ui_heart.pal.bin")
   ObjBladeSlashPalette*: cstring = staticRead("gfx/obj_bladeslash.pal.bin")

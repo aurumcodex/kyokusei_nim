@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-22
+  Date Modified: 2019-11-24
 
   ## [Random File]
   A file for the ability to generate random numbers.
@@ -44,6 +44,3 @@ proc xorwowRNG*(state: var XorWowState): uint =
 
   state.counter += 1000
   return temp + state.counter
-
-proc getXorwow*() =
-  discard

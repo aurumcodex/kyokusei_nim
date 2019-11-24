@@ -49,6 +49,7 @@ type
     Enemy
     Projectile
     Item
+    UserInterface
 
 type
   EnemyAI* {.pure.} = enum
@@ -66,10 +67,12 @@ type
     actorType*: ActorType
     objID*: uint8
     spriteIndex*: uint16
+    lookDir*: LookDir
     velocity*: uint
     pos*: Vec2i
     height*: uint
     width*: uint
+    isEcho*: bool
     isBullet*: bool
     visible*: bool
     used*: bool
@@ -78,9 +81,10 @@ type
   Player* = object
     ## A Player data type that holds various points of data.
     actorType*: ActorType
-    objID*: uint
+    objID*: uint8
     spriteIndex*: uint16
     animState*: AnimState
+    lookDir*: LookDir
     HP*: int
     ammoCount*: uint
     ammoList*: array[0..4, Projectile]
@@ -92,6 +96,7 @@ type
     polarity*: Polarity
     verticalMove*: bool
     isEcho*: bool
+    isBullet*: bool
 
 type
   Dummy* = object
@@ -112,6 +117,8 @@ type
     scoreValue*: uint
     aiType*: EnemyAI
     visible*: bool
+    isEcho*: bool
+    isBullet*: bool
 
 type
   Item* = object
@@ -120,28 +127,43 @@ type
     actorType*: ActorType
     objID*: uint8
     spriteIndex*: uint16
+    lookDir*: LookDir
     pos*: Vec2i
-    height*: uint
-    width*: uint
+    height*: int
+    width*: int
     visible*: bool
+    isEcho*: bool
+    isBullet*: bool
+
+type
+  UserInterface* = object
+    ## A data type to hold some information about the user interface.
+    actorType*: ActorType
+    objID*: uint8
+    spriteIndex*: uint16
+    pos*: Vec2i
+    height*: int
+    width*: int
     used*: bool
-    
+    isEcho*: bool
+    isBullet*: bool
+
 proc manhattanDistance*[T, U](obj: T, target: U): int =
   ## Function to asisst in determining the shortest distance to the target sprite from a source sprite.
   result = abs(obj.pos.x - target.pos.x) + abs(obj.pos.y - target.pos.y)
     
-proc xCollision*[T,U](obj: T, target: U): bool =
-  ## Generic function to detect if collision occurs in terms of X position.
-  return ((target.pos.x > obj.pos.x) and (target.pos.x < obj.pos.x+obj.width)) or
-         ((target.pos.x+target.width > obj.pos.x) and (target.pos.x+target.width < obj.pos.x+obj.width))
+# proc xCollision[T,U](obj: T, target: U): bool =
+#   ## Generic function to detect if collision occurs in terms of X position.
+#   return ((target.pos.x > obj.pos.x) and (target.pos.x < obj.pos.x+obj.width)) or
+#          ((target.pos.x+target.width > obj.pos.x) and (target.pos.x+target.width < obj.pos.x+obj.width))
 
-proc yCollision*[T,U](obj: T, target: U): bool =
-  ## Generic function to detect if collision occurs in terms of Y position.
-  return ((target.pos.y > obj.pos.y) and (target.pos.y < obj.pos.y+obj.height)) or
-         ((target.pos.y+target.height > obj.pos.y) and (target.pos.y+target.height < obj.pos.y+obj.height))
+# proc yCollision[T,U](obj: T, target: U): bool =
+#   ## Generic function to detect if collision occurs in terms of Y position.
+#   return ((target.pos.y > obj.pos.y) and (target.pos.y < obj.pos.y+obj.height)) or
+#          ((target.pos.y+target.height > obj.pos.y) and (target.pos.y+target.height < obj.pos.y+obj.height))
 
-proc hasCollided*[T,U](obj: T, target: U, frames: uint): bool =
-  ## A generic function to determine if something has collided with something else.
-  if frames mod 2 == 0:
-    result = xCollision(obj, target) and yCollision(obj, target)
+# proc hasCollided*[T,U](obj: T, target: U, frames: uint): bool =
+#   ## A generic function to determine if something has collided with something else.
+#   if frames mod 2 == 0:
+#     result = xCollision(obj, target) and yCollision(obj, target)
 

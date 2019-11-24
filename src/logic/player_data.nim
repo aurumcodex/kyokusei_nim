@@ -4,6 +4,7 @@ var player = Player(
   objID: 0,
   spriteIndex: EchoSprite,
   animState: asIdle,
+  lookDir: LookDir.Left,
   HP: 10,
   ammoCount: 5,
   # ammoList: bulletList,
@@ -19,4 +20,5 @@ var player = Player(
 
 include projectile_data
 
-player.ammoList = bulletList
+player.ammoList = bladeSlashList
+# player.ammoList = bulletList

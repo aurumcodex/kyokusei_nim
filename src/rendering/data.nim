@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-22
+  Date Modified: 2019-11-24
 
   ## [Data File]
   A file used for the functions that load in the data required for the sprites and
@@ -31,15 +31,16 @@ proc loadObjPalettes*() =
   ## Function to load palette data into respective palette banks.
   memcpy16(addr palObjBank[0], BotPalette, BotPalette.len div 2)
   memcpy16(addr palObjBank[1], EchoPalette, EchoPalette.len div 2)
-  memcpy16(addr palObjBank[2], EnemyChronchaPalette, EnemyChronchaPalette.len div 2)
-  memcpy16(addr palObjBank[3], PumpkinPalette, PumpkinPalette.len div 2)
-  memcpy16(addr palObjBank[4], EnemySlimePalette, EnemySlimePalette.len div 2)
-  memcpy16(addr palObjBank[6], EnemyTrentPalette, EnemyTrentPalette.len div 2)
-  memcpy16(addr palObjBank[7], UIHeartPalette, UIHeartPalette.len div 2)
-  memcpy16(addr palObjBank[8], ObjBladeSlashPalette, ObjBladeSlashPalette.len div 2)
-  memcpy16(addr palObjBank[9], ObjBulletPalette, ObjBulletPalette.len div 2)
-  memcpy16(addr palObjBank[10], ObjHealthPalette, ObjHealthPalette.len div 2)
-  memcpy16(addr palObjBank[11], EnemyNaniteWavePalette, EnemyNaniteWavePalette.len div 2)
+  memcpy16(addr palObjBank[2], InvertEchoPalette, InvertEchoPalette.len div 2)
+  memcpy16(addr palObjBank[3], EnemyChronchaPalette, EnemyChronchaPalette.len div 2)
+  memcpy16(addr palObjBank[4], PumpkinPalette, PumpkinPalette.len div 2)
+  memcpy16(addr palObjBank[6], EnemySlimePalette, EnemySlimePalette.len div 2)
+  memcpy16(addr palObjBank[8], EnemyTrentPalette, EnemyTrentPalette.len div 2)
+  memcpy16(addr palObjBank[9], UIHeartPalette, UIHeartPalette.len div 2)
+  memcpy16(addr palObjBank[10], ObjBladeSlashPalette, ObjBladeSlashPalette.len div 2)
+  memcpy16(addr palObjBank[11], ObjBulletPalette, ObjBulletPalette.len div 2)
+  memcpy16(addr palObjBank[12], ObjHealthPalette, ObjHealthPalette.len div 2)
+  memcpy16(addr palObjBank[13], EnemyNaniteWavePalette, EnemyNaniteWavePalette.len div 2)
 
 proc loadBGTiles*(rid: RoomId) =
   ## Function to load tile data for the backgrounds depending on the room ID passed to it.

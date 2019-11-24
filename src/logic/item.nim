@@ -2,5 +2,6 @@
 
 import tonc
 
+import ../actors
 import ../collision
 

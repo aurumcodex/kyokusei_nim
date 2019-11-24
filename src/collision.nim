@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-22
+  Date Modified: 2019-11-24
 
   ## [Collision File]
   A file used for determining collision for any sprites that are classified as `obj`.
@@ -17,6 +17,24 @@ import geometry
 
 from rendering import Room, RoomId
 
+#[Object Collision]#
+proc xCollision[T,U](obj: T, target: U): bool =
+  ## Generic function to detect if collision occurs in terms of X position.
+  return ((target.pos.x > obj.pos.x) and (target.pos.x < obj.pos.x+obj.width)) or
+         ((target.pos.x+target.width > obj.pos.x) and (target.pos.x+target.width < obj.pos.x+obj.width))
+
+proc yCollision[T,U](obj: T, target: U): bool =
+  ## Generic function to detect if collision occurs in terms of Y position.
+  return ((target.pos.y > obj.pos.y) and (target.pos.y < obj.pos.y+obj.height)) or
+         ((target.pos.y+target.height > obj.pos.y) and (target.pos.y+target.height < obj.pos.y+obj.height))
+
+proc hasCollided*[T,U](obj: T, target: U, frames: uint): bool =
+  ## A generic function to determine if something has collided with something else.
+  if frames mod 2 == 0:
+    result = xCollision(obj, target) and yCollision(obj, target)
+
+
+#[Background Collision]#
 proc roomOneCollision[T](obj: var T, submap: Submap): bool =
   ## A generic function for determining 
   ## This is *extremely* crude, but since the nim-tonc doesn't fully wrap the tonclib perfectly,

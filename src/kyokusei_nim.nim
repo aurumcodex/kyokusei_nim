@@ -52,6 +52,7 @@ var posVec = vec2i(0, 152)
 var soundbankBin* {.importc:"soundbank_bin", header:"soundbank_bin.h".}: pointer
 var modSpacecat* {.importc:"MOD_SPACECAT", header:"soundbank.h".}: uint
 var modFlatOutLies* {.importc:"MOD_FLAT_OUT_LIES", header:"soundbank.h".}: uint
+var sfxShoot* {.importc:"SFX_SHOOT", header:"soundbank.h".}: uint
 
 var slime = Enemy(
   objID: 3,
@@ -69,12 +70,26 @@ var slime = Enemy(
 # This is *not* an import; it just includes all of the data from a file and places it here.
 include logic/player_data
 
-var gameInfo = Game(frameCount: 0,
-                    player: player,
-                    bgOffsets: bg1Vec,
-                    state: gsTitle,
-                    hiScore: 100,
-                    score: 0)
+var health = Item(
+  actorType: ActorType.Item,
+  objID: 4,
+  spriteIndex: 640'u16,
+  pos: posVec,
+  height: 8,
+  width: 8,
+  visible: true,
+  isEcho: false,
+  isBullet: false
+)
+
+var gameInfo = Game(
+  frameCount: 0,
+  player: player,
+  bgOffsets: bg1Vec,
+  state: gsTitle,
+  hiScore: 100,
+  score: 0
+)
 
 var rngState: XorWowState
 
@@ -126,102 +141,39 @@ proc initialize*() =
   tteSetMargins(0, 0, 240, 100)
 
 
-#[OAM Sprite Setup]#
-proc initializeOAM*() =
-  if player.polarity == Polarity.Impulse:
-    for projectile in items(bladeSlashList):
-      oamMem[projectile.objID].setAttr(
-        ATTR0_Y(projectile.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-        ATTR1_X(projectile.pos.x.uint16) or ATTR1_SIZE_16x16,
-        ATTR2_ID(projectile.spriteIndex) or ATTR2_PALBANK(9)
-      )
-      oamMem[projectile.objId].hide
-  elif player.polarity == Polarity.Keen:
-    for projectile in items(bulletList):
-      oamMem[projectile.objID].setAttr(
-        ATTR0_Y(projectile.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-        ATTR1_X(projectile.pos.x.uint16) or ATTR1_SIZE_8x8,
-        ATTR2_ID(projectile.spriteIndex) or ATTR2_PALBANK(10)
-      )
-      oamMem[projectile.objId].hide
-  # var count = 0
-  # discard
-
-# var position: vec2i = Vec2i(100, 50)
-
-# #[Simple Sprite Renderer]#
-# proc simpleSpriteRender*() =
-#   var tileId: uint32 = 1
-#   var palId: uint32 = 0
-
-#   oamMem[0].setAttr(
-#     ATTR0_Y(position.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-#     ATTR1_X(position.x.uint16) or ATTR1_SIZE_16x16,
-#     ATTR2_ID(tileID) or ATTR2_PALBANK(palId)
-#   )
-
-#   while true:
-#     if keyIsDown(KEY_LEFT):
-#       position.pos.x -= 1
-#     if keyIsDown(KEY_RIGHT):
-#       position.pos.x += 1
-#     if keyIsDown(KEY_UP):
-#       position.pos.y -= 1
-#     if keyIsDown(KEY_DOWN):
-#       position.pos.y += 1
-
-#     oamMem[0].setPos(position)
-
 #[Main Game Loop]#
 proc main() =
   ## Main game logic; a sort of "glue" that binds all of the features together.
 
   initialize()    # Initialize all data points.
-  initializeOAM() # Initialize OAM data.
+  # initializeOAM() # Initialize OAM data.
 
-  oamMem[player.objID].setAttr(
-    ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_TALL,
-    ATTR1_X(player.pos.x.uint16) or ATTR1_SIZE_16x32,
-    ATTR2_ID(player.spriteIndex) or ATTR2_PALBANK(0)
-  )
+  
 
-  oamMem[1].setAttr(
-    ATTR0_Y(120) or ATTR0_4BPP or ATTR0_TALL,
-    ATTR1_X(140) or ATTR1_SIZE_16x32,
-    ATTR2_ID(518) or ATTR2_PALBANK(1)
-  )
-
-  # oamMem[2].setAttr(
-  #   ATTR0_Y(posVec.y.uint16 + 10) or ATTR0_4BPP or ATTR0_TALL,
-  #   ATTR1_X(posVec.x.uint16 + 50) or ATTR1_SIZE_16x32,
-  #   ATTR2_ID(76) or ATTR2_PALBANK(6)
-  # )
-
-  #[slime stuff]#
-  # oamMem[3].setAttr(
-  #   ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-  #   ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
-  #   ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
-  # )
-
-  # oamMem[4].setAttr(
-  #   ATTR0_Y(slimePos.y.uint16 + 30) or ATTR0_4BPP or ATTR0_SQUARE,
-  #   ATTR1_X(slimePos.x.uint16 - 20) or ATTR1_SIZE_32x32,
-  #   ATTR2_ID(613) or ATTR2_PALBANK(3)
+  # oamMem[1].setAttr(
+  #   ATTR0_Y(120) or ATTR0_4BPP or ATTR0_TALL,
+  #   ATTR1_X(140) or ATTR1_SIZE_16x32,
+  #   ATTR2_ID(518) or ATTR2_PALBANK(1)
   # )
 
   oamMem[32].setAttr(
     ATTR0_Y(posVec.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
     ATTR1_X(posVec.x.uint16) or ATTR1_SIZE_8x8,
-    ATTR2_ID(255) or ATTR2_PALBANK(10)
+    ATTR2_ID(255) or ATTR2_PALBANK(12)
   )
 
-  # initialize the MaxMod playback with default settings and with the soundbank files,
+  # Initialize the MaxMod playback with default settings and with the soundbank files,
   # then starts playing the .mod file called "spacecat."
   maxmod.init(soundbankBin, 8)
   maxmod.start(modSpacecat, MM_PLAY_LOOP)
 
   while true:
+
+    player.ammoList[1].pos = vec2i(player.pos.x+(player.width div 2), player.pos.y+(player.height div 2))
+
+    player.ammoList[1].renderProjectile
+    player.renderPlayer
+    health.renderItem
     # loadBGMap(riOne)
     rngState = XorWowState(
       a: gameInfo.frameCount,
@@ -233,10 +185,11 @@ proc main() =
 
     if gameInfo.frameCount mod 10 == 0:
       # printScore(gameInfo.frameCount)
-      printScore(delay)
+      # printScore(delay)
+      # printScore(player)
       # printScore(xorShiftRNG(gameInfo.frameCount))
       # printScore(xorwowRNG(rngState))
-      # printPlayerPos(player.pos.x, player.pos.y)
+      printPlayerPos(player.pos.x, player.pos.y)
 
     keyPoll()
 
@@ -258,12 +211,15 @@ proc main() =
     #     if slime.spriteIndex == 561:
     #       slime.spriteIndex = 549
 
-    # if keyIsDown(KEY_SELECT):
-    #   displayText(1)
-
     # if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
     #   maxmod.stop()
     #   maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
+
+    if player.backgroundCollision(room) == false:
+      player.autoMove(room)
+      player.verticalMove = true
+    if player.backgroundCollision(room) == true:
+      player.verticalMove = false
 
     if keyIsUp(KEY_SELECT) and not keyIsUp(KEY_R) and gameInfo.frameCount > 300'u:
       tteEraseScreen()
@@ -276,9 +232,6 @@ proc main() =
     oamMem[32].setPos(posVec)  # debug sprite
 
     maxmod.frame()  # Increment frame for MaxMod playback to work properly.
-
-    # if player.hasCollided(slime, gameInfo.frameCount):
-    #   displayText(42)
 
     moveScreen(player, bg1Vec, room)
 

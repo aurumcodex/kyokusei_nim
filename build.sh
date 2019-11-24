@@ -28,7 +28,7 @@ make clean
 
 # Generate random seeds for use in ROM.
 printf "\n${BLD_YLW}::${RESET} ${BOLD}Creating RNG Seed file...${RESET}\n"
-xxd -c8 -l16 -i /dev/urandom > src/rng_seeds.c
+xxd -c8 -l4 -i /dev/urandom > src/rng_seeds.c
 c2nim src/rng_seeds.c
 # readonly HEXDUMP=$(xxd -c8 -n16 -i /dev/urandom)
 
