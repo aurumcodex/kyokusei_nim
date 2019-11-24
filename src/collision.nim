@@ -64,12 +64,12 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
         obj.pos.x = (152 - obj.width) - 1
         return true
       if (obj.pos.x >= 127 and obj.pos.x <= 192):
-        if obj.pos.y + obj.height == 80:
-          obj.pos.y = (80 - obj.height) - 1
-        if obj.pos.y == 87:
-          obj.pos.y = 88
+        if obj.pos.y + obj.height == 88:
+          obj.pos.y = (88 - obj.height) - 1
+        if obj.pos.y == 95:
+          obj.pos.y = 96
           return true
-      if obj.pos.y + obj.height >= 80 and (obj.pos.y <= 87):
+      if obj.pos.y + obj.height >= 88 and (obj.pos.y <= 95):
         if obj.pos.x == 192:
           obj.pos.x = 193
           return true
@@ -90,6 +90,10 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
       (obj.pos.y + obj.height >= 24 and obj.pos.y + obj.height <= SCREEN_HEIGHT - 8):
       obj.pos.x = 177
       return true
+    if obj.pos.x >= 176 and obj.pos.x <= 200:
+      if obj.pos.y + obj.height == 51:
+        obj.pos.y = 50 - obj.height
+        return true
     if obj.pos.x + obj.width >= 48 and obj.pos.x + obj.width <= 176:
       if obj.pos.y + obj.height == 24:
         obj.pos.y = (24 - obj.height) - 1
@@ -131,7 +135,7 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
       obj.pos.y = ((SCREEN_HEIGHT - 4) - obj.height) - 1
       return true
 
-    if obj.pos.x >= 0 and obj.pos.x + obj.width <= 128:
+    if obj.pos.x >= 0 and obj.pos.x #[+ obj.width]# <= 128:
       if obj.pos.y == 4:
         obj.pos.y = 5
         return true
@@ -158,8 +162,8 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
       if obj.pos.x == 12:
         obj.pos.x = 13
         return true
-      if obj.pos.y == 128:
-        obj.pos.y = 129
+      if obj.pos.y == 124:
+        obj.pos.y = 125
         return true
       
     else:
@@ -192,18 +196,20 @@ proc roomOneCollision[T](obj: var T, submap: Submap): bool =
         obj.pos.x = (SCREEN_WIDTH - 16) - obj.width
         return true
       if obj.pos.x >= 32 and obj.pos.x + obj.width <= 200:
-        if obj.pos.y == 120:
-          obj.pos.y = 121
+        if obj.pos.y == 116:
+          obj.pos.y = 117
           return true
         if obj.pos.x == 32:
+          # if obj.pos.y == 116:
           obj.pos.x = 33
           return true
         if obj.pos.x + obj.width == (SCREEN_WIDTH - 40):
+          # if obj.pos.y == 116:
           obj.pos.x = ((SCREEN_WIDTH - 40) - obj.width) - 1
           return true
       if (obj.pos.x >= 0 and obj.pos.x <= 32) or (obj.pos.x >= (SCREEN_WIDTH - 40)):
-        if obj.pos.y == 128:
-          obj.pos.y = 129
+        if obj.pos.y == 124:
+          obj.pos.y = 125
           return true
       if obj.pos.x >= 64 and obj.pos.x <= 128:
         if obj.pos.y + obj.height == SCREEN_HEIGHT - 8:

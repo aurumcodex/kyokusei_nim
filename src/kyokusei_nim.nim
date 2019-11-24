@@ -29,7 +29,7 @@ import rendering      # also imports the sprites, since that's chained in.
 import text
 import utility
 
-import logic/random
+import logic/rngs
 
 #[Inline Assembly]#
 # Some inline assembly, mainly for emulators or flashcarts, since those search
@@ -40,43 +40,34 @@ asm """
 """
 
 #[Variables]#
-var rID = riOne
+var roomID = riOne
 var bg1Vec = Offsets(xOffset: 0, yOffset: 0)
 var room = Room(roomID: riOne, submap: sectionOne)
-# var section = 0
 
-var
-  posVec = vec2i(0, 152)
-  slimeIndex = 37
+var delay: uint = 0   ## used for key input delay.
+
+var posVec = vec2i(0, 152)
   
 # importSoundbank()
 var soundbankBin* {.importc:"soundbank_bin", header:"soundbank_bin.h".}: pointer
 var modSpacecat* {.importc:"MOD_SPACECAT", header:"soundbank.h".}: uint
 var modFlatOutLies* {.importc:"MOD_FLAT_OUT_LIES", header:"soundbank.h".}: uint
-  
-var player = Player(objID: 0,
-                    spriteIndex: 513'u16,
-                    animState: asIdle,
-                    HP: 10,
-                    ammoCount: 8,
-                    damage: 10,
-                    pos: vec2i(100, 10),
-                    height: 16, # 32 when playing as Echo, 16 as Era
-                    width: 16,
-                    gravity: gNormal,
-                    polarity: pImpulse)
-  
-var slime = Enemy(objID: 3,
-                  spriteIndex: 549'u16,
-                  animState: asIdle,
-                  HP: 10,
-                  damage: 2,
-                  pos: vec2i(50, 12),
-                  height: 16,
-                  width: 16)
-  
+
+var slime = Enemy(
+  objID: 3,
+  spriteIndex: 549'u16,
+  animState: asIdle,
+  HP: 10,
+  damage: 2,
+  pos: vec2i(50, 12),
+  height: 16,
+  width: 16,
+  scoreValue: 10,
+  aiType: EnemyAI.Slime
+)
+
 # This is *not* an import; it just includes all of the data from a file and places it here.
-include rendering/projectile_data
+include logic/player_data
 
 var gameInfo = Game(frameCount: 0,
                     player: player,
@@ -124,9 +115,9 @@ proc initialize*() =
   loadObjPalettes()
 
   # Load Background Tiles, Palettes, and Map data
-  loadBGTiles(rID)
-  loadBGPalettes(rID)
-  loadBGMap(rID)
+  loadBGTiles(roomID)
+  loadBGPalettes(roomID)
+  loadBGMap(roomID)
 
   # Initialize the Tonc Text Engine (Nim wrapped)
   tteInitCon()
@@ -137,8 +128,24 @@ proc initialize*() =
 
 #[OAM Sprite Setup]#
 proc initializeOAM*() =
-  var count = 0
-  discard
+  if player.polarity == Polarity.Impulse:
+    for projectile in items(bladeSlashList):
+      oamMem[projectile.objID].setAttr(
+        ATTR0_Y(projectile.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+        ATTR1_X(projectile.pos.x.uint16) or ATTR1_SIZE_16x16,
+        ATTR2_ID(projectile.spriteIndex) or ATTR2_PALBANK(9)
+      )
+      oamMem[projectile.objId].hide
+  elif player.polarity == Polarity.Keen:
+    for projectile in items(bulletList):
+      oamMem[projectile.objID].setAttr(
+        ATTR0_Y(projectile.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+        ATTR1_X(projectile.pos.x.uint16) or ATTR1_SIZE_8x8,
+        ATTR2_ID(projectile.spriteIndex) or ATTR2_PALBANK(10)
+      )
+      oamMem[projectile.objId].hide
+  # var count = 0
+  # discard
 
 # var position: vec2i = Vec2i(100, 50)
 
@@ -169,11 +176,12 @@ proc initializeOAM*() =
 proc main() =
   ## Main game logic; a sort of "glue" that binds all of the features together.
 
-  initialize() # Initialize all data points.
+  initialize()    # Initialize all data points.
+  initializeOAM() # Initialize OAM data.
 
   oamMem[player.objID].setAttr(
-    ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(player.pos.x.uint16) or ATTR1_SIZE_16,
+    ATTR0_Y(player.pos.y.uint16) or ATTR0_4BPP or ATTR0_TALL,
+    ATTR1_X(player.pos.x.uint16) or ATTR1_SIZE_16x32,
     ATTR2_ID(player.spriteIndex) or ATTR2_PALBANK(0)
   )
 
@@ -218,22 +226,25 @@ proc main() =
     rngState = XorWowState(
       a: gameInfo.frameCount,
       b: gameInfo.frameCount mod 42,
-      c: gameInfo.frameCount shr 2,
-      d: gameInfo.frameCount - 300,
+      c: gameInfo.frameCount shr 3,
+      d: gameInfo.frameCount - 3000,
       counter: 0
     )
 
     if gameInfo.frameCount mod 10 == 0:
       # printScore(gameInfo.frameCount)
-      printScore(xorwowRNG(rngState))
+      printScore(delay)
+      # printScore(xorShiftRNG(gameInfo.frameCount))
+      # printScore(xorwowRNG(rngState))
       # printPlayerPos(player.pos.x, player.pos.y)
 
     keyPoll()
 
     # rand(frameCount)
     # randomize(gameInfo.frameCount.int64)
-
-    player.move(room)
+    
+    keyRepeatLimits(0, 0)
+    player.getInput(room, delay)
 
     # if keyIsDown(KEY_ANY):
     #   if gameInfo.frameCount mod 10 == 0:
@@ -272,6 +283,10 @@ proc main() =
     moveScreen(player, bg1Vec, room)
 
     inc(gameInfo.frameCount) # increment frame count
+    inc(delay)
+
+    if delay == 20:  # if delay hits 5 seconds
+      delay = 0
 
     VBlankIntrWait()
 

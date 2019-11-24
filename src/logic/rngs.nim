@@ -7,7 +7,8 @@
   A file for the ability to generate random numbers.
   Uses the `xorwow` algorithm to generate numbers.
 
-  More info at: https://en.wikipedia.org/wiki/Xorshift#xorwow
+  More info at:
+    https://en.wikipedia.org/wiki/Xorshift
 
   ## [License]
   MIT Licensed. View LICENSE file for details.
@@ -24,9 +25,10 @@ type
 
 proc xorwowRNG*(state: var XorWowState): uint =
   ## Takes a state and generates a number from the given state.
+  ## This is surprisingly safe for the GBA.
   ## Slightly modified from the link below.
+  ##
   ## More Info can be found at: https://en.wikipedia.org/wiki/Xorshift#xorwow
-  # static:
   var s: uint = state.a
 
   var temp = state.d
@@ -41,4 +43,7 @@ proc xorwowRNG*(state: var XorWowState): uint =
   state.a = temp
 
   state.counter += 1000
-  result = temp + state.counter
+  return temp + state.counter
+
+proc getXorwow*() =
+  discard

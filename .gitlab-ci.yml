@@ -6,7 +6,9 @@ compile:
   image:
     name: registry.gitlab.com/kyokusei/ci_images/nim_gba:latest
   before_script:
+    - apt install -y xxd
     - nimble install https://github.com/exelotl/nim-tonc.git
+    - nimble install https://github.com/nim-lang/c2nim.git
   #   - apt install -y texlive
   #   - apt install -y pandoc
   script:

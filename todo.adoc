@@ -5,9 +5,9 @@
 Remaining Items: approx. *36*
 Estimated Feature Completeness: *1%*
 
-== Features Remaining = [13]
+== Features Remaining = [11]
 - [ ] Sprite Animation (3 sprites will be actually "animated" (maybe))
-- [ ] Collision Detection (should be next priority; in progress)
+- [x] Collision Detection
 - [ ] Gravity Shifting Bot Gameplay Mechanics (this will probably be refactored)
 - [ ] Forme Shifting Player Gamplay Mechanics
 - [x] Background Changing (this might be a tricky thing to do)
@@ -65,7 +65,7 @@ Estimated Feature Completeness: *1%*
 === Input Related
 // TODOs for input stuff
 - [x] get user input for sprites (mostly for testing, at current point)
-- [ ] get user input for changing "polarities"
+- [ ] get user input for changing "polarities" (started)
 - [ ] get user input for menus (optional)
 
 === Geometry Related

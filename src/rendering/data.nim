@@ -20,11 +20,12 @@ proc loadObjSprites*() =
   memcpy32(addr tileMemObj[1][14], EnemyChronchaTiles, EnemyChronchaTiles.len div 4)
   memcpy32(addr tileMemObj[1][36], EnemySlimeTiles, EnemySlimeTiles.len div 4)
   memcpy32(addr tileMemObj[1][77], EnemyTrentTiles, EnemyTrentTiles.len div 4)
-  memcpy32(addr tileMemObj[1][100], PumpkinTiles, PumpkinTiles.len div 4)
-  memcpy32(addr tileMemObj[1][117], UIHeartTiles, UIHeartTiles.len div 4)
+  memcpy32(addr tileMemObj[1][99], PumpkinTiles, PumpkinTiles.len div 4)
+  memcpy32(addr tileMemObj[1][200], UIHeartTiles, UIHeartTiles.len div 4)
   memcpy32(addr tileMemObj[1][118], ObjBladeSlashTiles, ObjBladeSlashTiles.len div 4)
   memcpy32(addr tileMemObj[1][125], ObjBulletTiles, ObjBulletTiles.len div 4)
   memcpy32(addr tileMemObj[1][127], ObjHealthTiles, ObjHealthTiles.len div 4)
+  memcpy32(addr tileMemObj[1][129], EnemyNaniteWaveTiles, EnemyNaniteWaveTiles.len div 4)
 
 proc loadObjPalettes*() =
   ## Function to load palette data into respective palette banks.
@@ -38,6 +39,7 @@ proc loadObjPalettes*() =
   memcpy16(addr palObjBank[8], ObjBladeSlashPalette, ObjBladeSlashPalette.len div 2)
   memcpy16(addr palObjBank[9], ObjBulletPalette, ObjBulletPalette.len div 2)
   memcpy16(addr palObjBank[10], ObjHealthPalette, ObjHealthPalette.len div 2)
+  memcpy16(addr palObjBank[11], EnemyNaniteWavePalette, EnemyNaniteWavePalette.len div 2)
 
 proc loadBGTiles*(rid: RoomId) =
   ## Function to load tile data for the backgrounds depending on the room ID passed to it.
