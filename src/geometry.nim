@@ -37,3 +37,18 @@ type
     sectionFour
     sectionFive
     sectionSix
+
+type
+  RoomId* = enum
+    ## An enum type for determing which backgrounds to load in the dedicated
+    ## rendering functions for the backgrounds.
+    riOne
+    riTwo
+    riThree
+    riFour
+
+type
+  Room* = object
+    ## A data type that holds some info about the current room.
+    roomID*: RoomID
+    submap*: Submap

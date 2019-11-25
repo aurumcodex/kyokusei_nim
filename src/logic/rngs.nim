@@ -14,6 +14,8 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
+import tonc
+
 type
   XorWowState* = object
     ## Struct to hold information about the current random state.

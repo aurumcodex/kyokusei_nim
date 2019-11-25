@@ -15,7 +15,7 @@ import tonc
 
 import actors
 import collision
-import rendering
+import geometry
 
 include logic/projectile_data
 
@@ -33,7 +33,6 @@ proc autoMove*(sprite: var Player, room: Room) =
 
 proc autoMove*(sprite: var Projectile, room: Room) =
   discard
-
 
 proc move*(player: var Player, room: Room) =
   ## Function to move around on the screen.
@@ -64,6 +63,7 @@ proc move*(player: var Player, room: Room) =
       player.pos.y += 1
 
 proc invert*(player: var Player, room: Room, delay: var uint) =
+  ## "Inverts" the player sprite in terms of gravity.
   keyRepeatLimits(0, 0)
   if player.gravity == Gravity.Normal and player.verticalMove == false and delay <= 10'u:
     player.gravity = Gravity.Invert
@@ -74,7 +74,9 @@ proc invert*(player: var Player, room: Room, delay: var uint) =
     player.verticalMove = true
 
 proc fireShot*(player: var Player) =
+  ## A function to fire off a projectile sprite from the center of the player sprite.
   ##
+  ## (Currently very glitchy, and doesn't fire off projectiles)
   case player.ammoCount:
     of 1, 2, 3, 4, 5:
       player.ammoList[player.ammoCount].visible = true
@@ -83,7 +85,7 @@ proc fireShot*(player: var Player) =
       discard
 
 proc shiftPolarity*(player: var Player, forme: Polarity) =
-  ##
+  ## 
   keyRepeatLimits(0, 0)
   if player.polarity == Polarity.Keen:
     if forme == Polarity.Impulse:
@@ -138,7 +140,10 @@ proc getInput*(player: var Player, room: Room, delay: var uint) =
     player.fireShot
     discard
   if keyIsDown(KEY_START):
-    discard
+    # testing with this button
+    if delay < 2'u:
+      player.HP -= 2
+    # discard
   if keyIsDown(KEY_SELECT):
     player.changeSprite(delay)
   if keyIsDown(KEY_L):

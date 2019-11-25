@@ -5,6 +5,8 @@
 
   ## [Collision File]
   A file used for determining collision for any sprites that are classified as `obj`.
+  Makes use of Nim's generic typing capabilities to make this code significantly more
+  usable, and saves on debug time.
 
   ## [License]
   MIT Licensed. View LICENSE file for details.
@@ -12,10 +14,10 @@
 
 import tonc
 
-import actors
+# import actors
 import geometry
 
-from rendering import Room, RoomId
+# from rendering import Room, RoomId
 
 #[Object Collision]#
 proc xCollision[T,U](obj: T, target: U): bool =

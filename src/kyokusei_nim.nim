@@ -11,9 +11,6 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
-#[System Imports]#
-# import random
-
 #[Nimble Imports]#
 import tonc
 import tonc/maxmod
@@ -29,6 +26,7 @@ import rendering      # also imports the sprites, since that's chained in.
 import text
 import utility
 
+import logic/enemy_ai
 import logic/rngs
 
 #[Inline Assembly]#
@@ -54,34 +52,11 @@ var modSpacecat* {.importc:"MOD_SPACECAT", header:"soundbank.h".}: uint
 var modFlatOutLies* {.importc:"MOD_FLAT_OUT_LIES", header:"soundbank.h".}: uint
 var sfxShoot* {.importc:"SFX_SHOOT", header:"soundbank.h".}: uint
 
-var slime = Enemy(
-  objID: 3,
-  spriteIndex: 549'u16,
-  animState: asIdle,
-  HP: 10,
-  damage: 2,
-  pos: vec2i(50, 12),
-  height: 16,
-  width: 16,
-  scoreValue: 10,
-  aiType: EnemyAI.Slime
-)
-
 # This is *not* an import; it just includes all of the data from a file and places it here.
 include logic/player_data
+include rendering/user_interface
 
-var health = Item(
-  actorType: ActorType.Item,
-  objID: 4,
-  spriteIndex: 640'u16,
-  pos: posVec,
-  height: 8,
-  width: 8,
-  visible: true,
-  isEcho: false,
-  isBullet: false
-)
-
+#[Hold Game Information]#
 var gameInfo = Game(
   frameCount: 0,
   player: player,
@@ -91,6 +66,9 @@ var gameInfo = Game(
   score: 0
 )
 
+include logic/enemy_data
+
+var enemy: Enemy
 var rngState: XorWowState
 
 proc initialize*() =
@@ -148,14 +126,6 @@ proc main() =
   initialize()    # Initialize all data points.
   # initializeOAM() # Initialize OAM data.
 
-  
-
-  # oamMem[1].setAttr(
-  #   ATTR0_Y(120) or ATTR0_4BPP or ATTR0_TALL,
-  #   ATTR1_X(140) or ATTR1_SIZE_16x32,
-  #   ATTR2_ID(518) or ATTR2_PALBANK(1)
-  # )
-
   oamMem[32].setAttr(
     ATTR0_Y(posVec.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
     ATTR1_X(posVec.x.uint16) or ATTR1_SIZE_8x8,
@@ -168,52 +138,44 @@ proc main() =
   maxmod.start(modSpacecat, MM_PLAY_LOOP)
 
   while true:
-
+    # enemy = genEnemy(room)
+    enemy = slime
+    
     player.ammoList[1].pos = vec2i(player.pos.x+(player.width div 2), player.pos.y+(player.height div 2))
-
     player.ammoList[1].renderProjectile
+    
     player.renderPlayer
-    health.renderItem
+    # health.renderItem
     # loadBGMap(riOne)
     rngState = XorWowState(
       a: gameInfo.frameCount,
       b: gameInfo.frameCount mod 42,
       c: gameInfo.frameCount shr 3,
-      d: gameInfo.frameCount - 3000,
+      d: gameInfo.frameCount - 30000,
       counter: 0
     )
+
+    enemy.renderEnemy(gameInfo.frameCount)
+    enemy.runAI(rngState, gameInfo.frameCount, room)
+      
+    player.checkHealth
+    hearts.checkState(player)
+    hearts.renderUI
 
     if gameInfo.frameCount mod 10 == 0:
       # printScore(gameInfo.frameCount)
       # printScore(delay)
-      # printScore(player)
-      # printScore(xorShiftRNG(gameInfo.frameCount))
       # printScore(xorwowRNG(rngState))
       printPlayerPos(player.pos.x, player.pos.y)
 
     keyPoll()
-
-    # rand(frameCount)
-    # randomize(gameInfo.frameCount.int64)
-    
+    # Poll the key presses, and get the user's input
     keyRepeatLimits(0, 0)
     player.getInput(room, delay)
 
-    # if keyIsDown(KEY_ANY):
-    #   if gameInfo.frameCount mod 10 == 0:
-    #     slime.animState = asMove
-    #     slime.spriteIndex += 4
-    #     oamMem[3].setAttr(
-    #       ATTR0_Y(slime.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    #       ATTR1_X(slime.pos.x.uint16) or ATTR1_SIZE_16x16,
-    #       ATTR2_ID(slime.spriteIndex) or ATTR2_PALBANK(4)
-    #     )
-    #     if slime.spriteIndex == 561:
-    #       slime.spriteIndex = 549
-
-    # if keyIsDown(KEY_SELECT) and keyIsDown(KEY_L) and keyIsDown(KEY_R):
-    #   maxmod.stop()
-    #   maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
+    if room.submap == Submap.sectionSix:
+      maxmod.stop()
+      maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
 
     if player.backgroundCollision(room) == false:
       player.autoMove(room)
@@ -229,7 +191,7 @@ proc main() =
 
     oamMem[player.objID].setPos(player.pos)
     # oamMem[slime.objID].setPos(slime.pos)
-    oamMem[32].setPos(posVec)  # debug sprite
+    # oamMem[32].setPos(posVec)  # debug sprite
 
     maxmod.frame()  # Increment frame for MaxMod playback to work properly.
 

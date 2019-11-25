@@ -11,25 +11,12 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
+## TODO: Make the life bar get rendered.
+
 import tonc
 
 import actors
 import geometry
-
-type
-  RoomId* = enum
-    ## An enum type for determing which backgrounds to load in the dedicated
-    ## rendering functions for the backgrounds.
-    riOne
-    riTwo
-    riThree
-    riFour
-
-type
-  Room* = object
-    ## A data type that holds some info about the current room.
-    roomID*: RoomID
-    submap*: Submap
 
 #[Sprite, Palette, and Map Data Loading]#
 # Check out the Nim file in `rendering/data.nim` for the functions listed there.
@@ -39,12 +26,9 @@ include rendering/data
 # Check out the Nim file in `rendering/screens.nim` for the functions listed there.
 include rendering/screens
 
-#[Rendering Functions]#
-proc renderSprite*[T](sprite: var T) =
-  ## Generic function for rendering the Sprite of choice, and dependent on the actor type.
-  discard
-      
+const baseSlimeSprite: uint16 = 549'u16
 
+#[Rendering Functions]#
 proc renderPlayer*(sprite: var Player) =
   ## Rendering function to automatically render the OAM attributes of the player sprite(s).
   if not sprite.isEcho:
@@ -157,22 +141,49 @@ proc renderProjectile*(sprite: var Projectile) =
         ATTR1_X(sprite.pos.x.uint16) or ATTR1_SIZE_16x16 or ATTR1_HFLIP,
         ATTR2_ID(sprite.spriteIndex) or ATTR2_PALBANK(10)
       )
+  if not sprite.visible:
+    oamMem[sprite.objID].hide
 
 proc renderItem*(sprite: var Item) =
   oamMem[sprite.objID].setAttr(
     ATTR0_Y(sprite.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(sprite.pos.x.uint16) or ATTR1_SIZE_16x16,
+    ATTR1_X(sprite.pos.x.uint16) or ATTR1_SIZE_8x8,
     ATTR2_ID(sprite.spriteIndex) or ATTR2_PALBANK(12)
   )
 
-proc renderUI*(sprite: var UserInterface) =
+proc renderHeart(sprite: UserInterface) =
   oamMem[sprite.objID].setAttr(
     ATTR0_Y(sprite.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
     ATTR1_X(sprite.pos.x.uint16) or ATTR1_SIZE_8x8,
     ATTR2_ID(sprite.spriteIndex) or ATTR2_PALBANK(9)
   )
 
-proc renderEnemy(enemy: var Enemy) =
+proc renderUI*(sprites: array[0..4, UserInterface]) =
+  sprites[0].renderHeart
+  sprites[1].renderHeart
+  sprites[2].renderHeart
+  sprites[3].renderHeart
+  sprites[4].renderHeart
+
+proc renderSlime(sprite: var Enemy, frames: var uint) =
+  if sprite.lookDir == LookDir.Left:
+    if frames mod 10 == 0:
+      # sprite.animState = asMove
+      oamMem[sprite.objID].setAttr(
+        ATTR0_Y(sprite.pos.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
+        ATTR1_X(sprite.pos.x.uint16) or ATTR1_SIZE_16x16,
+        ATTR2_ID(sprite.spriteIndex) or ATTR2_PALBANK(4)
+      )
+      sprite.spriteIndex += 4
+      if sprite.spriteIndex == 561:
+        sprite.spriteIndex = baseSlimeSprite
+  
+
+proc renderEnemy*(enemy: var Enemy, frames: var uint) =
   ## Rendering function to automatically render the OAM attributes of the enemy sprite(s).
-  # TODO: add logic
-  discard
+  # TODO: add logic to function
+  case enemy.aiType:
+    of EnemyAI.Slime:
+      enemy.renderSlime(frames)
+    else:   
+      discard

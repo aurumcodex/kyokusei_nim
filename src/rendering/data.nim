@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-24
+  Date Modified: 2019-11-25
 
   ## [Data File]
   A file used for the functions that load in the data required for the sprites and
@@ -18,6 +18,7 @@ proc loadObjSprites*() =
   memcpy32(addr tileMemObj[1][0], BotTiles, BotTiles.len)
   memcpy32(addr tileMemObj[1][5], EchoTiles, EchoTiles.len div 4)
   memcpy32(addr tileMemObj[1][14], EnemyChronchaTiles, EnemyChronchaTiles.len div 4)
+  memcpy32(addr tileMemObj[1][26], EnemySentryTiles, EnemySentryTiles.len div 4)
   memcpy32(addr tileMemObj[1][36], EnemySlimeTiles, EnemySlimeTiles.len div 4)
   memcpy32(addr tileMemObj[1][77], EnemyTrentTiles, EnemyTrentTiles.len div 4)
   memcpy32(addr tileMemObj[1][99], PumpkinTiles, PumpkinTiles.len div 4)
@@ -41,6 +42,7 @@ proc loadObjPalettes*() =
   memcpy16(addr palObjBank[11], ObjBulletPalette, ObjBulletPalette.len div 2)
   memcpy16(addr palObjBank[12], ObjHealthPalette, ObjHealthPalette.len div 2)
   memcpy16(addr palObjBank[13], EnemyNaniteWavePalette, EnemyNaniteWavePalette.len div 2)
+  memcpy16(addr palObjBank[15], EnemySentryTiles, EnemySentryPalette.len div 2)
 
 proc loadBGTiles*(rid: RoomId) =
   ## Function to load tile data for the backgrounds depending on the room ID passed to it.

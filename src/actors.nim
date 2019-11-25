@@ -13,6 +13,7 @@
 
 import tonc
 
+import collision
 import geometry
 
 const EchoSprite*: uint16 = 518
@@ -70,6 +71,7 @@ type
     lookDir*: LookDir
     velocity*: uint
     pos*: Vec2i
+    damage*: int
     height*: uint
     width*: uint
     isEcho*: bool
@@ -96,11 +98,16 @@ type
     polarity*: Polarity
     verticalMove*: bool
     isEcho*: bool
-    isBullet*: bool
+    visible*: bool
+    takingDamage*: bool
 
 type
   Dummy* = object
-    
+    ## An NPC type of actor. Does absolutely nothing but stand around.
+    actorType*: ActorType
+    objID*: uint8
+    spriteIndex*: uint16
+    pos*: Vec2i
 
 type
   Enemy* = object
@@ -109,6 +116,7 @@ type
     objID*: uint8
     spriteIndex*: uint16
     animState*: AnimState
+    lookDir*: LookDir
     HP*: int
     damage*: int
     pos*: Vec2i
@@ -142,28 +150,23 @@ type
     objID*: uint8
     spriteIndex*: uint16
     pos*: Vec2i
-    height*: int
-    width*: int
+    # height*: int
+    # width*: int
     used*: bool
-    isEcho*: bool
-    isBullet*: bool
 
 proc manhattanDistance*[T, U](obj: T, target: U): int =
   ## Function to asisst in determining the shortest distance to the target sprite from a source sprite.
-  result = abs(obj.pos.x - target.pos.x) + abs(obj.pos.y - target.pos.y)
-    
-# proc xCollision[T,U](obj: T, target: U): bool =
-#   ## Generic function to detect if collision occurs in terms of X position.
-#   return ((target.pos.x > obj.pos.x) and (target.pos.x < obj.pos.x+obj.width)) or
-#          ((target.pos.x+target.width > obj.pos.x) and (target.pos.x+target.width < obj.pos.x+obj.width))
+  return abs(obj.pos.x - target.pos.x) + abs(obj.pos.y - target.pos.y)
 
-# proc yCollision[T,U](obj: T, target: U): bool =
-#   ## Generic function to detect if collision occurs in terms of Y position.
-#   return ((target.pos.y > obj.pos.y) and (target.pos.y < obj.pos.y+obj.height)) or
-#          ((target.pos.y+target.height > obj.pos.y) and (target.pos.y+target.height < obj.pos.y+obj.height))
+proc takeProjectileDamage*[T](obj: T, projectile: Projectile) =
+  if obj.hasCollided(projectile):
+    obj.HP -= projectile.damage
 
-# proc hasCollided*[T,U](obj: T, target: U, frames: uint): bool =
-#   ## A generic function to determine if something has collided with something else.
-#   if frames mod 2 == 0:
-#     result = xCollision(obj, target) and yCollision(obj, target)
+proc collectItem*(player: var Player, item: var Item) =
+  item.visible = false
+  if player.HP < 10:
+    player.HP += 2
 
+proc checkHealth*[T](obj: var T) =
+  if obj.HP <= 0:
+    obj.visible = false
