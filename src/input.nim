@@ -20,6 +20,7 @@ import geometry
 include logic/projectile_data
 
 proc autoMove*(sprite: var Player, room: Room) =
+  ## A function to automatically move the player sprite within the current room.
   if sprite.gravity == Gravity.Invert:
     if not sprite.backgroundCollision(room):
       sprite.pos.y -= 1
@@ -32,6 +33,7 @@ proc autoMove*(sprite: var Player, room: Room) =
     oamMem[sprite.objID].setPos(sprite.pos)
 
 proc autoMove*(sprite: var Projectile, room: Room) =
+  ## TODO: to be implemented for projectiles.
   discard
 
 proc move*(player: var Player, room: Room) =
@@ -50,18 +52,6 @@ proc move*(player: var Player, room: Room) =
     else:
       player.pos.x += 1
 
-  if keyIsDown(KEY_UP):
-    if backgroundCollision(player, room):
-      player.pos.y -= 0
-    else:
-      player.pos.y -= 1
-
-  if keyIsDown(KEY_DOWN): 
-    if backgroundCollision(player, room):
-      player.pos.y += 0
-    else:
-      player.pos.y += 1
-
 proc invert*(player: var Player, room: Room, delay: var uint) =
   ## "Inverts" the player sprite in terms of gravity.
   keyRepeatLimits(0, 0)
@@ -76,7 +66,7 @@ proc invert*(player: var Player, room: Room, delay: var uint) =
 proc fireShot*(player: var Player) =
   ## A function to fire off a projectile sprite from the center of the player sprite.
   ##
-  ## (Currently very glitchy, and doesn't fire off projectiles)
+  ## (Currently very glitchy, and doesn't fire off projectiles correctly)
   case player.ammoCount:
     of 1, 2, 3, 4, 5:
       player.ammoList[player.ammoCount].visible = true
@@ -85,7 +75,7 @@ proc fireShot*(player: var Player) =
       discard
 
 proc shiftPolarity*(player: var Player, forme: Polarity) =
-  ## 
+  ## "Shifts" the polarity of the user; Dependant on the shoulder button pressed.
   keyRepeatLimits(0, 0)
   if player.polarity == Polarity.Keen:
     if forme == Polarity.Impulse:
@@ -95,7 +85,7 @@ proc shiftPolarity*(player: var Player, forme: Polarity) =
       player.polarity = forme
 
 proc changeSprite*(player: var Player, delay: uint) =
-  ##
+  ## Changes the sprite used for player rendering from the Era sprite to the Echo sprite and vice versa.
   keyRepeatLimits(0, 0)
   if keyIsDown(KEY_SELECT):
     if player.isEcho and delay <= 10'u:
@@ -129,24 +119,26 @@ proc changeSprite*(player: var Player, delay: uint) =
         )
 
 proc getInput*(player: var Player, room: Room, delay: var uint) =
-  ##
-  if keyIsDown(KEY_DIR):
-    player.move(room)
-  if keyIsDown(KEY_A):
-    # player.invert(room)
-    player.invert(room, delay)
-    discard
-  if keyIsDown(KEY_B):
-    player.fireShot
-    discard
-  if keyIsDown(KEY_START):
-    # testing with this button
-    if delay < 2'u:
-      player.HP -= 2
-    # discard
-  if keyIsDown(KEY_SELECT):
-    player.changeSprite(delay)
-  if keyIsDown(KEY_L):
-    player.shiftPolarity(Polarity.Impulse)
-  if keyIsDown(KEY_R):
-    player.shiftPolarity(Polarity.Keen)
+  ## Function to get the user's input, and calles the appropriate functions
+  ## depending on which functions are pressed.
+  if player.visible:
+    if keyIsDown(KEY_DIR):
+      player.move(room)
+    if keyIsDown(KEY_A):
+      # player.invert(room)
+      player.invert(room, delay)
+      discard
+    if keyIsDown(KEY_B):
+      player.fireShot
+      discard
+    if keyIsDown(KEY_START):
+      # testing with this button
+      if delay < 2'u:
+        player.HP -= 2
+      # discard
+    if keyIsDown(KEY_SELECT):
+      player.changeSprite(delay)
+    if keyIsDown(KEY_L):
+      player.shiftPolarity(Polarity.Impulse)
+    if keyIsDown(KEY_R):
+      player.shiftPolarity(Polarity.Keen)

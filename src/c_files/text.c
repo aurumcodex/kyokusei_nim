@@ -21,7 +21,7 @@
  */
 void print_player_pos(s32 x, s32 y)
 {
-    tte_erase_screen();
+    // tte_erase_screen();
     tte_printf("#{P:120,0}x: %d; y: %d", x, y);
 }
 

@@ -54,6 +54,7 @@ var sfxShoot* {.importc:"SFX_SHOOT", header:"soundbank.h".}: uint
 
 # This is *not* an import; it just includes all of the data from a file and places it here.
 include logic/player_data
+include logic/enemy_data
 include rendering/user_interface
 
 #[Hold Game Information]#
@@ -66,9 +67,18 @@ var gameInfo = Game(
   score: 0
 )
 
-include logic/enemy_data
+# some extra variables for extra loop logic
+var enemyLoaded: bool = false
+var submapLoaded: bool = false
+var folPlaying: bool = false
+var naniteFloat: bool = true
+
+var previousSubmap: Submap
+var previousSection: uint
+var section: uint
 
 var enemy: Enemy
+
 var rngState: XorWowState
 
 proc initialize*() =
@@ -119,6 +129,22 @@ proc initialize*() =
   tteSetMargins(0, 0, 240, 100)
 
 
+proc currentSubmap(room: Room): uint =
+  ## A quick and dirty function to get the numerical value of the room's current submap.
+  case room.submap:
+    of Submap.sectionOne:
+      return 1
+    of Submap.sectionTwo:
+      return 2
+    of Submap.sectionThree:
+      return 3
+    of Submap.sectionFour:
+      return 4
+    of Submap.sectionFive:
+      return 5
+    of Submap.sectionSix:
+      return 6
+
 #[Main Game Loop]#
 proc main() =
   ## Main game logic; a sort of "glue" that binds all of the features together.
@@ -126,27 +152,37 @@ proc main() =
   initialize()    # Initialize all data points.
   # initializeOAM() # Initialize OAM data.
 
-  oamMem[32].setAttr(
-    ATTR0_Y(posVec.y.uint16) or ATTR0_4BPP or ATTR0_SQUARE,
-    ATTR1_X(posVec.x.uint16) or ATTR1_SIZE_8x8,
-    ATTR2_ID(255) or ATTR2_PALBANK(12)
-  )
-
   # Initialize the MaxMod playback with default settings and with the soundbank files,
   # then starts playing the .mod file called "spacecat."
   maxmod.init(soundbankBin, 8)
   maxmod.start(modSpacecat, MM_PLAY_LOOP)
 
   while true:
-    # enemy = genEnemy(room)
-    enemy = slime
+    section = room.currentSubmap
+    if not submapLoaded:
+      submapLoaded = true
+      previousSubmap = room.submap
+      previousSection = section
+      
+    if not enemyLoaded and (previousSection == section) and submapLoaded:
+      enemy = genEnemy(room)
+      enemyLoaded = true
+
+    if not (previousSection == section):
+      submapLoaded = false
+    
+    if room.submap == Submap.sectionSix:
+      if player.pos.y < 60:
+        enemy = pumpkin
+
+    enemy.checkHealth
+    # enemy = slime
     
     player.ammoList[1].pos = vec2i(player.pos.x+(player.width div 2), player.pos.y+(player.height div 2))
     player.ammoList[1].renderProjectile
     
     player.renderPlayer
-    # health.renderItem
-    # loadBGMap(riOne)
+    
     rngState = XorWowState(
       a: gameInfo.frameCount,
       b: gameInfo.frameCount mod 42,
@@ -155,27 +191,42 @@ proc main() =
       counter: 0
     )
 
-    enemy.renderEnemy(gameInfo.frameCount)
-    enemy.runAI(rngState, gameInfo.frameCount, room)
-      
+    enemy.renderEnemy(gameInfo.frameCount, room)
+       
     player.checkHealth
+    player.enemyCollision(enemy, gameInfo.frameCount)
     hearts.checkState(player)
     hearts.renderUI
 
-    if gameInfo.frameCount mod 10 == 0:
-      # printScore(gameInfo.frameCount)
-      # printScore(delay)
-      # printScore(xorwowRNG(rngState))
-      printPlayerPos(player.pos.x, player.pos.y)
+    if player.HP <= 0:
+      player.pos.x = 0
+      player.pos.y = 0
+      tteEraseScreen()
+      tteInitChr4c(0, BG_CBB(4) or BG_SBB(10), 0xF000, bytes2word(1,2,0,0), CLR_RED, addr verdana10Font, nil)
+      tteWrite("#{P:80,40}You have died.")
+
+    if enemy.aiType == EnemyAI.NaniteWave:
+      if enemy.pos.y == 60:
+        enemy.pos.y += 1
+        naniteFloat = false
+      elif enemy.pos.y == 90:
+        enemy.pos.y -= 1
+        naniteFloat = true
+
+    enemy.runAI(rngState, gameInfo.frameCount, room, naniteFloat)
+
+    if gameInfo.frameCount mod 2 == 0 and player.HP > 0:
+      printScore(player.HP.uint)
 
     keyPoll()
     # Poll the key presses, and get the user's input
     keyRepeatLimits(0, 0)
     player.getInput(room, delay)
 
-    if room.submap == Submap.sectionSix:
+    if room.submap == Submap.sectionSix and player.pos.y < 80 and not folPlaying:
       maxmod.stop()
       maxmod.start(modFlatOutLies, MM_PLAY_LOOP)
+      folPlaying = true
 
     if player.backgroundCollision(room) == false:
       player.autoMove(room)
@@ -189,9 +240,7 @@ proc main() =
     if keyIsDown(KEY_START) and (keyIsDown(KEY_L) or keyIsDown(KEY_R)):
       writeSave(player)
 
-    oamMem[player.objID].setPos(player.pos)
-    # oamMem[slime.objID].setPos(slime.pos)
-    # oamMem[32].setPos(posVec)  # debug sprite
+    oamMem[player.objID].setPos(player.pos) # set player sprite position.
 
     maxmod.frame()  # Increment frame for MaxMod playback to work properly.
 
@@ -203,6 +252,9 @@ proc main() =
     if delay == 20:  # if delay hits 5 seconds
       delay = 0
 
-    VBlankIntrWait()
+    VBlankIntrWait() # Wait for VSync to finish
+
+    if submapLoaded and enemy.HP == 0 and not enemy.visible:
+      enemyLoaded = false
 
 main()

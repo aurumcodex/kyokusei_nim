@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-24
+  Date Modified: 2019-11-25
 
   ## [Collision File]
   A file used for determining collision for any sprites that are classified as `obj`.
@@ -32,8 +32,8 @@ proc yCollision[T,U](obj: T, target: U): bool =
 
 proc hasCollided*[T,U](obj: T, target: U, frames: uint): bool =
   ## A generic function to determine if something has collided with something else.
-  if frames mod 2 == 0:
-    result = xCollision(obj, target) and yCollision(obj, target)
+  # if frames mod 2 == 0:
+  return xCollision(obj, target) and yCollision(obj, target)
 
 
 #[Background Collision]#

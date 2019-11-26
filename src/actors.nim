@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-23
+  Date Modified: 2019-11-25
 
   ## [Actors File]
   A file used for various characters and things that the user can interact
@@ -150,8 +150,6 @@ type
     objID*: uint8
     spriteIndex*: uint16
     pos*: Vec2i
-    # height*: int
-    # width*: int
     used*: bool
 
 proc manhattanDistance*[T, U](obj: T, target: U): int =
@@ -162,11 +160,27 @@ proc takeProjectileDamage*[T](obj: T, projectile: Projectile) =
   if obj.hasCollided(projectile):
     obj.HP -= projectile.damage
 
+proc enemyCollision*(player: var Player, enemy: var Enemy, frames: uint) =
+  ## Detects if the player has collided with an enemy sprite, and deals damage.
+  if player.hasCollided(enemy, frames) and frames mod 2 == 0:
+    tteWrite("ouch")
+    if player.polarity == Polarity.Keen:
+      if enemy.HP > 0:
+        enemy.HP -= player.damage
+      else:
+        enemy.HP = enemy.HP
+    else:
+      if not (enemy.aiType == EnemyAI.Pumpkin):
+        if player.HP >= 0:
+          player.HP -= enemy.damage
+
 proc collectItem*(player: var Player, item: var Item) =
   item.visible = false
-  if player.HP < 10:
+  if player.HP < 10 and player.HP > 0:
     player.HP += 2
 
 proc checkHealth*[T](obj: var T) =
   if obj.HP <= 0:
     obj.visible = false
+  else:
+    obj.visible = true

@@ -18,7 +18,7 @@ var player = Player(
   HP: 10,
   ammoCount: 5,
   damage: 10,
-  pos: vec2i(100, 10),
+  pos: vec2i(20, 10),
   height: 32, # 32 when playing as Echo, 16 as Era
   width: 16,
   gravity: Gravity.Normal,

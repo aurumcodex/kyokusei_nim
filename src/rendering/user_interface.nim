@@ -11,8 +11,8 @@
   MIT Licensed. View LICENSE file for details.
 ]##
 
-const heartSprite: uint16 = 713
-const damageSprite: uint16 = 714
+const heartSprite: uint16 = 642
+const damageSprite: uint16 = 643
 
 var heart1 = UserInterface(
   actorType: ActorType.UserInterface,

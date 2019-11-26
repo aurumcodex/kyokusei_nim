@@ -1,0 +1,16 @@
+=== Controls
+.Control Scheme
+[%header,cols=2]
+|===================================================
+| Button            | Input
+| D-Pad Left        | Move Left
+| D-Pad Right       | Move Right
+| D-Pad Up          | `unused`
+| D-Pad Down        | `unused`
+| A Button          | Invert Gravity
+| B Button          | Shoot Projectile
+| L Button          | Shift to Impulse Forme
+| R Button          | Shift to Keen Forme
+| SELECT Button     | Change to Era/Echo
+| START Button      | `unused`
+|===================================================

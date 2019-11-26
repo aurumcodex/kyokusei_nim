@@ -1,7 +1,7 @@
 ##[
   極性 -Kyokusei- (Nim)
   =====================
-  Date Modified: 2019-11-10
+  Date Modified: 2019-11-25
 
   ## [Mechanics File]
   A file used for various gameplay mechanics within the game.
@@ -31,5 +31,3 @@ type
     dDown
     dRight
     dLeft
-
-# type

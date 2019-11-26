@@ -1,7 +1,7 @@
 = 極性 -Kyokusei- (Nim)
 Nathan Adams <aurumcodex@protonmail.com>
-v0.0.0, 2019.09.21
-:version: 0.0.0
+v0.0.0, 2019.11.25
+:version: 0.9.0
 :imagesdir: misc/img
 :homepage: https://kyokusei.gitlab.io
 
@@ -37,24 +37,9 @@ A GBA homebrew game developed in the Nim programming language. Contains "polarit
 
 Target Release Date: *11.25.2019*.
 
+Download from link:https://gitlab.com/kyokusei/kyokusei_nim/-/jobs/artifacts/master/download?job=compile[here.]
 
-=== Controls
-.Control Scheme
-[%header,cols=2]
-|===================================================
-| Button            | Input
-| D-Pad Left        | Move Left
-| D-Pad Right       | Move Right
-| D-Pad Up          | `unused`
-| D-Pad Down        | `unused`
-| A Button          | Invert Gravity
-| B Button          | Shoot Projectile
-| L Button          | Shift to Impulse Forme
-| R Button          | Shift to Keen Forme
-| SELECT Button     | Change to Era/Echo
-| START Button      | `unused`
-|===================================================
-
+include::controls.adoc[]
 
 '''
 
@@ -66,6 +51,17 @@ Target Release Date: *11.25.2019*.
 
 == Acknowledgements
 - *NotNova#9993*: sprite design (A Discord acquaintance of mine).
+
+NOTE: The audio files in the `audio` directory are not of my own creation, and were found
+in various code repositories in example sections.
+The png file labeled as `kakariko.png` is also not of my own creation, and was used only for early testing. That is copyright of Nintendo, and is thus not used within the product.
+
+NOTE: * The `FlatOutLies.mod` file is from the tonc examples found here: http://www.coranac.com/projects/tonc/
+
+NOTE: * The `spacecat.xm` and `shoot.wav` files are both from the same example code found in the nim-tonc library, found here: https://github.com/exelotl/nim-tonc/tree/master/examples/play_music
+
+
+
 
 == License
 This project is (currently) licensed under the link:LICENSE[MIT License]. All files within this repository are available under this license unless stated explicitly that it is not.

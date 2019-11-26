@@ -22,11 +22,11 @@ proc loadObjSprites*() =
   memcpy32(addr tileMemObj[1][36], EnemySlimeTiles, EnemySlimeTiles.len div 4)
   memcpy32(addr tileMemObj[1][77], EnemyTrentTiles, EnemyTrentTiles.len div 4)
   memcpy32(addr tileMemObj[1][99], PumpkinTiles, PumpkinTiles.len div 4)
-  memcpy32(addr tileMemObj[1][200], UIHeartTiles, UIHeartTiles.len div 4)
+  memcpy32(addr tileMemObj[1][129], UIHeartTiles, UIHeartTiles.len div 4)
   memcpy32(addr tileMemObj[1][118], ObjBladeSlashTiles, ObjBladeSlashTiles.len div 4)
   memcpy32(addr tileMemObj[1][125], ObjBulletTiles, ObjBulletTiles.len div 4)
   memcpy32(addr tileMemObj[1][127], ObjHealthTiles, ObjHealthTiles.len div 4)
-  memcpy32(addr tileMemObj[1][129], EnemyNaniteWaveTiles, EnemyNaniteWaveTiles.len div 4)
+  memcpy32(addr tileMemObj[1][200], EnemyNaniteWaveTiles, EnemyNaniteWaveTiles.len div 4)
 
 proc loadObjPalettes*() =
   ## Function to load palette data into respective palette banks.

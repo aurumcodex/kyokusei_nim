@@ -15,6 +15,9 @@ include ../logic/enemy_ai
 
 proc renderRoomEnemy*(enemy: var Enemy) =
   ## Renders the room with a given enemy type.
+  # Implemented elsewhere.
   case enemy.EnemyAI:
   of EnemyAI.Slime:
-    
+    discard
+  else:
+    discard
